@@ -12,14 +12,10 @@ use CATA\Entite;
  * --> Herite de ENTITE pour les fonction d'hydration dynamique
  * 
  * @author Quentin CELLE
- * _______________
  * 
- * $setTitre =>
- * $setLegend =>
- * $setBouton =>
- * $setCilbe =>
- * $setField => Assemble les champ de formulaire correspondant en appelant automatiquement les builder HTML
- * $buildHTML => Appel toute les BUILDER des Class de champ instancier des FIELD
+ * MàJ:
+ * [2022-03-17] Simplification du code de View()
+ * 
  * _______________
  * 
  * Fields => Tableau d'instance de Champ
@@ -38,59 +34,65 @@ class View extends Entite
     protected $_titre;
     protected $_bouton;
     protected $_cible;
+    protected $_name;
 
     public function setTitre($titre)
     {
-        $this->_titre = $titre;
+        $this->_titre = '<h1>' . $titre . '</h1>'; // Titre du Formulaire
     }
 
     public function setLegend($legend)
     {
-        $this->_legend = $legend;
+        $this->_legend = '<p>' . $legend . '</p>'; // Legende du Formulaire
     }
 
+    public function setName($n)
+    {
+        $this->_name = $n;
+    }
     public function setFields(array $field)
     {
         foreach ($field as $d) {
 
             if (!is_null($d['Table'])) {
                 $class = $d['Table']; // On Charge la valeur de Table qui nous indique le type de Champ
-                $namespace = '\\CATA\Field\\' . $class; // Association avec le NameSpace absolue du Champ
-                $instance =  new $namespace($d); // Instanciation dynamque de la Class corspondant au Champ
 
-                $this->_fields[] = $instance; // On ajoute le champ a la liste des champs
+                if (!is_null($this->_name)) {
+                    $d['Name'] = $this->_name . '[' . $d['Name'] . ']';
+                }
+
+                if (is_file('Core/Field/' . $class . '.php')) {
+                    $namespace = '\\CATA\Field\\' . $class; // Association avec le NameSpace absolue du Champ
+                    $instance =  new $namespace($d); // Instanciation dynamque de la Class corspondant au Champ
+                    $this->_fields[] = $instance; // On ajoute le champ a la liste des champs
+                } else {
+                    $this->_erreur = true;
+                    $this->_erreur_msg = 'le champ <b>' . $class . '</b> n\'existe pas!';
+                }
             }
         }
     }
 
     public function setBouton($bouton)
     {
-        $this->_bouton = '<button type="submit" class="btn btn-primary" onclick="sendData({test:"ok"})">' . $bouton . '</button>';
+        $this->_bouton = '<button type="submit" class="btn btn-primary" >' . $bouton . '</button>';
     }
 
     public function setCible($cible)
     {
-        $this->_cible = $cible;
+        $this->_cible = 'action="' . $cible . '"';
     }
 
-    public function HTML()
+    public function View()
     {
 
-        $html = '<h1>' . $this->_titre . '</h1>'; //Titre du Formulaire
-
-        if (!empty($this->_legend)) { // Si le champ est renseigner
-            $html .= '<p>' . $this->_legend . '</p>'; //Legende du formulaire
-        }
-
-        //$html .= '<form action="' . $this->_cible . '" method="post">'; // Zome du formulaire
-        $html .= '<form id="myForm">'; // Zome du formulaire
+        $f_html = NULL;
 
         foreach ($this->_fields as $field) { // On assemble les vues HTML de champ instancié
-            $html .= '<div class="form-group">' . $field->buildHTML() . '</div>'; // Génération du HTML de Champ
+            $f_html .= '<div class="form-group">' . $field->buildHTML() . '</div>'; // Génération du HTML de Champ
         }
 
-        $html .= $this->_bouton;
-        return $html .= '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+        return '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
     }
 
     //put your code here

@@ -9,6 +9,9 @@ namespace CATA\Field;
  * --> Herite de FIELD
  *
  * @author quentin
+ * 
+ * MàJ:
+ * [2022-03-17] Simplification de la fonction BuildHTML
  * _______________
  * 
  * $setType =>  SET le Type du Champ (text, password, ... )
@@ -19,12 +22,15 @@ namespace CATA\Field;
  * Size (int) => Taille MAX des fichiers
  * 
  */
-class Text extends Field {
+class Text extends Field
+{
 
     protected $_size;
     protected $_type;
+    protected $_placeholder;
 
-    public function setSize($size) { // Controle et convertion de nombre de colonne
+    public function setSize($size)
+    { // Controle et convertion de nombre de colonne
         $size = (int) $size;
         if ($size > 0) { //si superieur a zéro
             $this->_size = $size;
@@ -33,11 +39,18 @@ class Text extends Field {
         }
     }
 
-    public function setType($type) {
-        $this->_type = $type;
+    public function setType($type)
+    {
+        $this->_type = 'type="' . $type . '"';
     }
 
-    public function buildHTML() {
+    public function setPlaceholder($p)
+    {
+        $this->_placeholder = 'placeholder = "' . $p . '"';
+    }
+
+    public function buildHTML()
+    {
         $html = '';
         $size = NULL;
         $value = NULL;
@@ -47,7 +60,7 @@ class Text extends Field {
             $html .= $this->_errorMessage . '</br>';
         }
 
-        $label = '<label class="col-sm-2 col-form-label">' . $this->_label . '</label>';
+        $label = '<label class="form-label">' . $this->_label . '</label>';
 
         if (!empty($this->_size)) {
 
@@ -63,12 +76,10 @@ class Text extends Field {
             $lock = ' readonly';
         }
 
-        $input = '<div class="col-sm-10"><input type="' . $this->_type . '" class="form-control form-control-sm" name="' . $this->_name . '"' . $size . $value . $lock . '></div>';
+        $input = '<input class="form-control form-control-sm" ' . $this->_placeholder . $this->_type . ' name="' . $this->_name . '"' . $size . $value . $lock . '>';
 
-        return '<div class="form-group row">' . $label . $input . '</div>';
+        return  $label . $input;
     }
 
     //put your code here
 }
-
-?>

@@ -44,6 +44,6 @@ class Alerte extends Entite
             $button = False;
         }
 
-        return '<div class="alert alert-' . $this->_type . ' d-flex align-items-center mt-3" role="alert">' . $content . $button . '</div>';
+        return '<div class="alert alert-' . $this->_type . ' d-flex align-items-center mb-3" role="alert">' . $content . $button . '</div>';
     }
 }

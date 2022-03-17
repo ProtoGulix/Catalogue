@@ -8,11 +8,14 @@
 
 $container = NULL;
 $catalogue = NULL;
+$affi_erreur = NULL;
 
 $page = 'Page/';
 $page_folder = array_slice(scandir($page), 2);
 
 $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
+
+include 'POST.php';
 
 $query['page'] = 'accueil';
 $query['index'] = 1;
@@ -40,6 +43,10 @@ foreach ($_GET as $query_string_variable => $value) {
             $query['id'] = intval($value);
             break;
     }
+}
+
+if (isset($GLOBALS['affi_erreur'])) {
+    $container .= $GLOBALS['affi_erreur'];
 }
 
 // La variable $page existe-elle dans l'url ?

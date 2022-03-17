@@ -82,4 +82,4 @@ $Data = ['Titre' => 'Formulaire de Test', 'Legend' => 'Teste des fonctionnalité
 $form = new CATA\Form\View($Data);
 
 $container .= '<div class="row"><div class="col">' . $img . '</div>';
-$container .= '<div class="col">' . $form->HTML() . '</div></div>';
+$container .= '<div class="col">' . $form->View() . '</div></div>';

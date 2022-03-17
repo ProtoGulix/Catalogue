@@ -17,6 +17,7 @@ include 'Gestionnaire.php';
     <script src="vendor/bootstrap/5.0.2/js/bootstrap.min.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <link rel="stylesheet" href="vendor/style.css">
+    <title>Catalogue</title>
 
 </head>
 
@@ -50,7 +51,7 @@ include 'Gestionnaire.php';
         </div>
     </header>
 
-    <div class="container-lg">
+    <div class="container-lg pt-3">
         <?php echo $container; ?>
     </div>
 
