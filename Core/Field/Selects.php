@@ -9,6 +9,9 @@ namespace CATA\Field;
  * --> Herite de Field pour les paramétre standatd LABEL, NAME, VALUE, ERRORMESSAGE,
  * 
  * @author Quentin CELLE
+ * 
+ * Màj:
+ * [2022-03-16] : Simplification du code dans BuilHTML
  * _______________
  * 
  * $buildHTML => 
@@ -21,30 +24,34 @@ namespace CATA\Field;
  * Multi => Determine le type SIMPLE OU MULTIPLE selection
  * 
  */
-class Selects extends Field {
-    
+class Selects extends Field
+{
+
     protected $_multi;
-    
-    public function setMulti($multi){
+
+    public function setMulti($multi)
+    {
         $this->_multi = $multi;
     }
-    
-    public function buildHTML(){
-        
-        $html = '';
-        $html .='<select name="'. $this->_name .'"';
-        
-        if ($this->_multi == TRUE) { $html .=' multiple'; } // Indique si il y a mutli-selection
-        
-        $html .=' class="form-control">';
-        
-        foreach ( $this->_value as $v) { $html .='<option value"'. $v .'">'. $v .'</option>'; } // Vide le tabelau des options
 
-        $html .='</select>';
-        
-        return $html;
+    public function buildHTML()
+    {
+
+        $multi = NULL;
+        $option = NULL;
+        $label = '<label>' . $this->_label . '</label>';
+        $name = $this->_name;
+
+        if ($this->_multi == TRUE) {
+            $multi = ' multiple="multiple"';
+            $name .= '[]';
+        } // Indique si il y a mutli-selection
+
+        foreach ($this->_value as $k => $v) {
+            $option .= '<option value="' . $k . '">' . $v . '</option>';
+        } // Vide le tabelau des options
+
+        return $label . '<select name="' . $name . '" class="form-select"' . $multi . '>' . $option . '</select>';
     }
     //put your code here
 }
-
-?>

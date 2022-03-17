@@ -1,205 +1,83 @@
-switch ($query['page']) {
-    case 'accueil':
+<?php
 
+if (isset($_GET['no'])) {
+    $no = $_GET['no'];
 
-        $catalogue = 'series-3-part-manual-1';
-        $folder = array_slice(scandir($dir . '/' . $catalogue), 2);
-        natsort($folder);
+    $dir = 'Data/series-3-part-manual-1';
+    $path = $dir . '/' . 'series-3-part-manual-1' . '-' . $no;
+    $image = $path . '.jpg';
 
-        $i = 1;
+    $liste = new CATA\Document\CSV($path . '.csv');
+    $bloc = NULL;
 
-        foreach ($folder as $value) {
-            $path = $dir . '/' . $catalogue . '/' . $value;
-            $image = new \CATA\Document\Image($path);
+    foreach ($liste->Data() as $value) {
 
-            if ($image->Existe() && $image->Type() == 'jpeg') {
+        if (intval($value['level']) == 4) {
 
-                $query = ['page' => 'page', 'catalogue' => $catalogue, 'no' => $i];
-
-                $link = new CATA\View\Link(['text' => $image->View('200'), 'query' => $query]);
-                $container .= $link->View();
-                $i++;
+            $bloc['block_num'] = $value['block_num']; // Indice de confiance du bloc
+            $bloc['left'] = $value['left']; // Position a gauche
+            $bloc['top'] = $value['top']; // Position par rapport au haut
+            $bloc['width'] = $value['width']; // Largeur
+            $bloc['height'] = $value['height']; // Hauteur
+            $bloc['conf'] = NULL; // Coéfficient
+            $bloc['text'] = NULL; // Texte
+        } elseif (intval($value['level']) == 5) {
+            if ($bloc['conf'] < $value['conf']) {
+                $bloc['conf'] = $value['conf'];
             }
-        }
-
-        break;
-    case 'page':
-
-        $catalogue = htmlspecialchars($_GET['catalogue']);
-        $page = htmlspecialchars($_GET['no']);
-
-        $image_h = NULL;
-        $image_w = NULL;
-
-        $path = $dir . '/' . $catalogue . '/' . $catalogue . '-' . $page;
-
-        if (is_file($path . '.jpg')) {
-            $size = getimagesize($path . '.jpg');
-            $image_w = $size[0];
-            $image_h = $size[1];
-        }
-
-        $ratio = 0.35;
-
-        $d = NULL;
-        $b = NULL;
-        $box = NULL;
-
-        $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
-        $data = $bdd->prepare('SELECT `id`, `block_num`, `left`, `top`, `width`, `height`, `conf`, `text` FROM `bloc` WHERE page=:page');
-        $data->execute(array(':page' => $page));
-
-        while ($r = $data->fetch(PDO::FETCH_ASSOC)) {
-
-            $bloc = new \CATA\Catalogue\Bloc($r);
-
-            $b_data = ['Bloc' => $bloc, 'Ratio' => $ratio];
-            $box = new \CATA\View\Box($b_data);
-            $b .= $box->HTML();
-
-            $edit_query = ['page' => 'edit', 'id' => $bloc->Id()];
-            $edit_data = ['text' => 'Edition', 'query' => $edit_query, 'class' => 'btn btn-outline-primary btn-sm'];
-            $edit = new CATA\View\Link($edit_data);
-
-            $supr_query = ['page' => 'supp', 'id' => $bloc->Id()];
-            $supr_data = ['text' => 'Suppression', 'query' => $supr_query, 'class' => 'btn btn-danger btn-sm'];
-            $supr = new CATA\View\Link($supr_data);
-
-            $link = '<div class="btn-group">' . $edit->View() . $supr->View() . '</div>';
-
-            $d [] = ['block_num' => $bloc->BlockNum(), 'text' => $bloc->Text() . $link];
-        }
-
-        $donnees['Header'] = ['Texte'];
-        $donnees['Content'] = $d;
-        $table = new CATA\View\Tableau($donnees);
-
-        $container .= '<div class="row"><div class="col-6">' . $table->View() . '</div>';
-        $container .= '<div class="col-6"><div class="card border mt-3 rounded sticky-top"  width="' . round($image_w * $ratio) . 'px" height="' . round($image_h * $ratio) . 'px" ><img style="position: relative;" width="' . round($image_w * $ratio) . '" height="' . round($image_h * $ratio) . '" src="' . $path . '.jpg"/>' . $b . '</div></div>';
-
-        break;
-
-    case 'edit':
-        foreach ($_GET as $query_string_variable => $value) {
-            switch ($query_string_variable) {
-                case 'id':
-                    $edit['id'] = strval($value);
-                    break;
-            }
-        }
-
-        $bloc = NULL;
-        $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
-        $data = $bdd->prepare('SELECT `id`, `catalogue`,`page`, `block_num`, `left`, `top`, `width`, `height`, `conf`, `text` FROM `bloc` WHERE id=:id');
-        $data->execute(array(':id' => $edit['id']));
-
-
-        while ($r = $data->fetch(PDO::FETCH_ASSOC)) {
-            $bloc_edit = new CATA\Catalogue\Bloc($r);
-            $bloc_method = get_class_methods($bloc_edit);
-            if ($bloc_edit->Erreur()) {
-                $container .= $bloc_edit->ErreurMsg();
-            }
-            $i = 0;
-            foreach ($bloc_method as $value) {
-                if ($i < 10) {
-                    switch (strtolower($value)) {
-                        case 'text':
-                            $Dat[$i] = ['Table' => 'TextLong', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Cols' => 60, 'Rows' => 6];
-                            break;
-                        case 'id':
-                            $Dat[$i] = ['Table' => 'Text', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Size' => 60, 'lock' => true];
-                            break;
-                        case 'blocknum':
-                            $Dat[$i] = ['Table' => 'Text', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Size' => 60, 'lock' => true];
-                            break;
-                        case 'catalogue':
-                            $Dat[$i] = ['Table' => 'Text', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Size' => 60, 'lock' => true];
-                            break;
-                        case 'page':
-                            $Dat[$i] = ['Table' => 'Text', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Size' => 60, 'lock' => true];
-                            break;
-                        default:
-                            $Dat[$i] = ['Table' => 'Text', 'Label' => $value, 'Name' => $value, 'Value' => $bloc_edit->{$value}(), 'Type' => 'text', 'Size' => 60];
-                            break;
-                    }
-                }
-                $i++;
-            }
-        }
-
-        $h_image = 500;
-        $w_image = 700;
-
-        /* Réglage de la marge Haute */
-        if ($bloc_edit->Top() >= $h_image / 2) {
-            $i_top = - $bloc_edit->Top() + ($h_image / 2);
-            $b_top = $h_image / 2;
+            $bloc['text'] .= $value['text'] . ' ';
         } else {
-            $b_top = $bloc_edit->Top();
-            $i_top = 0;
-        }
-
-        /* Réglage de la marge gauche */
-        if ($bloc_edit->Left() >= $w_image / 4) {
-            $i_left = - ($bloc_edit->Left() - 20);
-            $b_left = 20;
-        } else {
-            $b_left = 20;
-            $i_left = - ($bloc_edit->Left() - 20);
-        }
-
-        $b_data = ['Bloc' => $bloc_edit, 'Ratio' => 0.75];
-        $box = new CATA\View\Box($b_data);
-
-        $w = 1653 * 0.75;
-
-        //$box = '<div class="border border-primary rounded border-5" id="block-' . $bloc_edit->BlockNum() . '" style="position: absolute; left: ' . $b_left . 'px; margin-top: ' . $b_top . 'px; width: ' . $bloc_edit->Width() . 'px; height: ' . $bloc_edit->Height() . 'px;"></div>';
-        $img = '<div class="border mt-3 rounded" style="position: relative; overflow: hidden;">' . $box->HTML() . '<img style="width: ' . $w . 'px" src="Data/' . $bloc_edit->Catalogue() . '/' . $bloc_edit->Catalogue() . '-' . $bloc_edit->Page() . '.jpg"></div>';
-
-        $Data = ['Titre' => 'Formulaire de Test', 'Legend' => 'Teste des fonctionnalité du formualaire. Ce texte vous permet de donnée des informations suplémentaire sur les fonction de celui ci.', 'Cible' => 'POST.php', 'Bouton' => 'Envoyer', 'Fields' => $Dat];
-
-
-        $form = new CATA\Form\View($Data);
-
-
-        $container .= '<div class="row"><div class="col">' . $img . '</div>';
-        $container .= '<div class="col">' . $form->HTML() . '</div></div>';
-
-        break;
-
-    case 'supp':
-
-        foreach ($_GET as $query_string_variable => $value) {
-            switch ($query_string_variable) {
-                case 'id':
-                    $supp['id'] = intval($value);
-                    break;
+            if (!is_null($bloc) and $bloc['conf'] > 50) {
+                $bloc['text'] = $bloc['text'];
+                $data[] = $bloc;
+                $bloc = NULL; // Initialisation de la variable
             }
         }
+    }
 
+    $test_page = $bdd->prepare('SELECT * FROM `page` WHERE id_catalogue=:id_catalogue AND numero=:numero');
+    $test_page->execute(array(':id_catalogue' => $catalogue, ':numero' => $no));
+
+    if (empty($test_page->fetch(PDO::FETCH_ASSOC))) {
+        $page = $bdd->prepare("INSERT INTO `page`(`id_catalogue`, `numero`, `image`) VALUES (:id_catalogue, :numero, :image)");
+
+        $page->bindParam(':id_catalogue', $catalogue);
+        $page->bindParam(':numero', $no);
+        $page->bindParam(':image', $image);
+
+        $page->execute();
+    } else {
+        $container .= 'Page déjà crée !';
+    }
+
+    foreach ($data as $value) {
         try {
-            $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
-            $data = $bdd->prepare('DELETE FROM `bloc` WHERE id=:id');
-            $data->execute(array(':id' => $supp['id']));
 
-            header("Refresh:5; url=?page=page&catalogue=series-3-part-manual-1&no=29");
+            $bdd = new PDO($dsn, $username);
+            $test_bloc = $bdd->prepare('SELECT * FROM `bloc` WHERE catalogue=:catalogue AND page=:page AND block_num=:block_num');
+            $test_bloc->execute(array(':catalogue' => $catalogue, ':page' => $no, ':block_num' => $value['block_num']));
+
+            if (empty($test_bloc->fetch(PDO::FETCH_ASSOC))) {
+
+                $bloc = $bdd->prepare("INSERT INTO `bloc`(`catalogue`, `page`, `block_num`, `left`, `top`, `width`, `height`, `conf`, `text`) VALUES (:catalogue, :page, :block, :left, :top, :width, :height, :conf, :text);");
+
+                $bloc->bindParam(':catalogue', $catalogue);
+                $bloc->bindParam(':page', $no);
+                $bloc->bindParam(':block', $value['block_num']);
+                $bloc->bindParam(':left', $value['left']);
+                $bloc->bindParam(':top', $value['top']);
+                $bloc->bindParam(':width', $value['width']);
+                $bloc->bindParam(':height', $value['height']);
+                $bloc->bindParam(':conf', $value['conf']);
+                $bloc->bindParam(':text', $value['text']);
+
+                $bloc->execute();
+            } else {
+                $container .= '</br> bloc :' . $value['block_num'];
+            }
         } catch (Exception $ex) {
+
             die('Erreur : ' . $ex->getMessage());
         }
-
-        $container .= $supp['id'];
-
-        break;
-
-
-    default :
-        $container .= '<div class="jumbotron">
-  <h1 class="display-4">Hello, world!</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <hr class="my-4">
-  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-</div>';
-        break;
+    }
 }

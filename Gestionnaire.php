@@ -9,8 +9,7 @@
 $container = NULL;
 $catalogue = NULL;
 
-$dir = 'Data';
-$page = 'Core/Page/';
+$page = 'Page/';
 $page_folder = array_slice(scandir($page), 2);
 
 $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
@@ -37,25 +36,22 @@ foreach ($_GET as $query_string_variable => $value) {
         case 'selection':
             $query['selection'] = $value;
             break;
-        case'id':
+        case 'id':
             $query['id'] = intval($value);
             break;
     }
 }
 
 // La variable $page existe-elle dans l'url ?
-if(!empty($_GET['page'])){
-  if(in_array($_GET['page'] . '.php', $page_folder, True)){
-    // Oui, alors on l'importe
-    include($page . $_GET['page'] . '.php');
-  }else {
-    // Non, alors on importe un fichier par défaut
-    include($page . 'error-404.php');
-  }
-
-}
-  else
-{
-  // Non, on affiche la page d'accueil par défaut
-  include($page . 'accueil.php');
+if (!empty($_GET['page'])) {
+    if (in_array($_GET['page'] . '.php', $page_folder, True)) {
+        // Oui, alors on l'importe
+        include($page . $_GET['page'] . '.php');
+    } else {
+        // Non, alors on importe un fichier par défaut
+        include($page . 'error-404.php');
+    }
+} else {
+    // Non, on affiche la page d'accueil par défaut
+    include($page . 'accueil.php');
 }
