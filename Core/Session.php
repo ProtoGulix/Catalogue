@@ -50,6 +50,11 @@ class Session
 
     public function Close()
     {
+        foreach ($_COOKIE as $key => $value) {
+            var_dump($key);
+            setcookie($key, NULL, -1); // Suppression du cookie client
+            unset($_COOKIE[$key]); // Suppression de la valeur dans COOKIE
+        }
     }
 
     public function Time()
@@ -67,7 +72,7 @@ class Session
                 if ($this->Time() <= (15 * 60)) {
                     return TRUE;
                 } else {
-                    return 'La session à expirer !';
+                    $this->Close();
                 }
             }
         }
