@@ -16,6 +16,9 @@ $username = 'root';
 
 $racine = 'https://localhost/Catalogue/';
 
+$dir_image = 'Image';
+$dir_image_page = 'Image/page';
+
 $pays = ['France', 'Allemagne', 'Protugal', 'Japon', 'Corée', 'Irland'];
 /*
 $Dat[0] = ['Table' => 'TextLong', 'Label' => 'Message', 'Name' => 'msg', 'Value' => 'Ecrie ici ton message', 'Cols' => 60, 'Rows' => 6];

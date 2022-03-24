@@ -51,7 +51,7 @@ class Session
     public function Close()
     {
         foreach ($_COOKIE as $key => $value) {
-            var_dump($key);
+            $GLOBALS['affi_erreur'] = ['button' => TRUE, 'text' => 'Vous avez été deconnécter', 'type' => 'danger'];
             setcookie($key, NULL, -1); // Suppression du cookie client
             unset($_COOKIE[$key]); // Suppression de la valeur dans COOKIE
         }

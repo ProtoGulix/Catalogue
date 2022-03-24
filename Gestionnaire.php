@@ -22,6 +22,17 @@ $page_folder = array_slice(scandir($page_dir), 2);
 
 $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
 
+function ChaineAleatoire($longueur = 10)
+{
+    $caracteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $longueurMax = strlen($caracteres);
+    $chaineAleatoire = '';
+    for ($i = 0; $i < $longueur; $i++) {
+        $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
+    }
+    return $chaineAleatoire;
+}
+
 include 'POST.php';
 
 $query['page'] = 'accueil';

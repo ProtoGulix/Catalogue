@@ -9,7 +9,7 @@ use CATA\Entite;
  * 
  * Affichage et uniformisation des tableau en HTML
  * 
- * @author Quentin CELLE TA68
+ * @author Quentin CELLE
  * 
  */
 class Tableau extends Entite

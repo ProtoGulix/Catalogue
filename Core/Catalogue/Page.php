@@ -4,19 +4,17 @@ namespace CATA\Catalogue;
 
 use CATA\Entite;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Page
  *
- * @author Quentin
+ * @author Quentin CELLE
  *
  * MàJ:
  * [2021-09-21] Création
+ * [2022-03-24] Amélioratin des fonction ViewImage, ViewTableau, SetBloc
+ * 
+ * @param array $data
+ * ['id' => int, 'id_catalogue' => int, 'numero' => int, 'ratio' => int, 'bloc' => array Objet Bloc, 'image' =>]
  */
 class Page extends Entite
 {
@@ -24,37 +22,49 @@ class Page extends Entite
     private $_id; // ID de la page dans la base de donnée
     private $_id_catalogue; // ID du catalogue
     private $_numero; // Numéro ou nom de la page
+    private $_ratio = 1; // Ratio d'affichage
     private $_bloc; // Liste des blocs sous forme d'objet \CATA\Catalogue\Bloc
     private $_image; // Objet \CATA\Document\Image
 
     /**
-     *
-     * @param type $n
+     * Set ID
+     * Determine l'ID du bloc
+     * @param int $n
      */
     protected function setId($i)
     {
         $this->_id = $i;
     }
 
+    /**
+     * Set ID CATALOGUE
+     * Determine l'ID du catalogue dans lequel ce trouve le bloc
+     * @param int $i
+     */
     protected function setId_catalogue($i)
     {
         $this->_id_catalogue = $i;
     }
 
+    /**
+     * Set NUMERO
+     * Determine le numéro du bloc dans la page
+     * @param int $n
+     */
     protected function setNumero($n)
     {
         $this->_numero = $n;
     }
 
-    protected function setBloc($b)
+    protected function setBloc($b_array)
     {
-        $this->_bloc = $b;
+        $this->_bloc = $b_array;
     }
 
     protected function setImage($i)
     {
-
-        $image = new \CATA\Document\Image($i);
+        $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
+        $image = new \CATA\Document\Image($i_dir);
 
         if ($image->Existe() && $image->Type() == 'jpeg') {
             $this->_image = $image;
@@ -62,6 +72,11 @@ class Page extends Entite
             $this->_erreur = true;
             $this->_erreur_msg = 'Erreur: l\'illustration séléctionné n\'est pas valide.';
         }
+    }
+
+    protected function SetRatio($r)
+    {
+        $this->_ratio = floatval($r);
     }
 
     public function Id()
@@ -84,25 +99,38 @@ class Page extends Entite
         return $this->_image->View(0.1);
     }
 
-    public function ViewImage($r)
+    /**
+     * ViewImage
+     * Retourne une l'illustration de la page avec les bloc affecter à leur position
+     * @return string HTML
+     */
+    public function ViewImage()
     {
+        $bloc = NULL;
+        $w_ratio = round($this->_image->With() * $this->_ratio);
 
-        $b = NULL;
-        $ratio = floatval($r);
-
-        foreach ($this->_bloc as $bloc) {
-            $b_data = ['Bloc' => $bloc, 'Ratio' => $ratio];
-            $box = new \CATA\View\Box($b_data);
-            $b .= $box->HTML();
+        foreach ($this->_bloc as $b) {
+            $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b), 'Ratio' => $this->_ratio]);
+            $bloc .= $box->View();
         }
 
-        return '<div style="position: relative;">' . $this->_illustration->View($ratio) . $b . '</div>';
+        return '<div class="card border p-3 rounded bg-dark text-center" id="page-image"><div class="position-relative m-auto" width="' . $w_ratio . '">' . $this->_image->View($this->_ratio) . $bloc . '</div></div>';
     }
 
     public function ViewTableau()
     {
+        $link =  NULL;
         foreach ($this->_bloc as $bloc) {
+            $b = new \CATA\Catalogue\Bloc($bloc);
+            $t[] = [
+                'block_num' => $b->BlockNum(),
+                $b->BlockNum(), $b->Text()
+            ];
         }
+
+        $table = new \CATA\View\Tableau(['Header' => ['#', 'Bloc'], 'Content' => $t, 'id' => 'page-image']);
+
+        return $table->View();
     }
 
     //put your code here

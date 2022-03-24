@@ -15,12 +15,14 @@ use CATA\File;
  *
  * @author Quentin
  */
-class Image extends File {
+class Image extends File
+{
 
     protected $_width;
     protected $_height;
 
-    public function __construct($d) {
+    public function __construct($d)
+    {
         parent::__construct($d);
 
         if ($this->_existe && $this->_type == 'jpeg') {
@@ -31,7 +33,18 @@ class Image extends File {
         }
     }
 
-    public function View(float $s) {
+    public function With()
+    {
+        return $this->_width;
+    }
+
+    public function Height()
+    {
+        return $this->_height;
+    }
+
+    public function View(float $s)
+    {
 
         $width = 'width="' . $this->_width . '"';
         $height = 'height="' . $this->_height . '"';

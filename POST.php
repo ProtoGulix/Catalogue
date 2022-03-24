@@ -6,17 +6,19 @@
  * and open the template in the editor.
  */
 
+$session = new \CATA\Session(); // Controleur de session 
 
-//include 'Config.php';
-//$bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
-
-$session = new \CATA\Session();
-
+// SI une session est ouverte 
 if ($session->Check()) {
 
     foreach ($_POST as $key => $value) {
 
         switch ($key) {
+                /**
+             * Case Page
+             * 
+             * Traitement des donnée du formulaire d'ajout d'une page
+             */
             case 'page':
 
                 $catalogue = intval($value['CatalogueValid']); // ID Catalogue dans la BDD
@@ -32,6 +34,8 @@ if ($session->Check()) {
 
                 /**
                  * Si le repertoire existe
+                 * Si l'ID du catalogue existe > 0
+                 * 
                  */
                 if (is_dir($path) && $catalogue > 0 && !is_null($page)) {
 
@@ -43,9 +47,17 @@ if ($session->Check()) {
                             // Création de la page
                             try {
                                 $page_query = "INSERT INTO page(id_catalogue, numero, image) VALUES (?, ?, ?)";
-                                $page = $bdd->prepare($page_query);
-                                $image = $path . '/' . $folder . '-' . $p . '.jpg';
-                                $page->execute([$catalogue, $p, $image]);
+                                $page = $bdd->prepare($page_query); // Préparation de la requéte
+                                $image = $path . '/' . $folder . '-' . $p . '.jpg'; // Chemin d'origine du fichier
+                                $image_out = ChaineAleatoire(60) . '.jpg'; // Nouveau nom du fichier
+                                $dir_out = $GLOBALS['dir_image_page'] . '/' .  $image_out; // Nouveaux chemin du fichier
+
+                                // Si le fichier est deplacer on execute la requete
+                                if (rename($image, $dir_out)) {
+                                    $page->execute([$catalogue, $p, $image_out]);
+                                } else {
+                                    echo 'erreur deplacement fichier image';
+                                }
                             } catch (Exception $e) {
                                 die('ERREUR : ' . $e);
                             }
@@ -117,16 +129,16 @@ if ($session->Check()) {
 
                 if ($catalogue > 0) {
                     try {
-                        $modif = $bdd->prepare("UPDATE catalogue SET name=? WHERE id=?");
-                        $modif->execute([$name, $catalogue]);
+                        $modif = $bdd->prepare("UPDATE catalogue SET name=?, date_modif=? WHERE id=?");
+                        $modif->execute([$name, time(), $catalogue]);
                     } catch (Exception $e) {
                         die('Erreur : ' . $e);
                     }
                     // SUCCESS
                     $GLOBALS['affi_erreur'] = ['button' => TRUE, 'text' => 'Le nom du catalogue à bien été modifier', 'type' => 'success'];
                 } elseif ($catalogue == 0 && !empty($name)) {
-                    $create = $bdd->prepare("INSERT INTO catalogue(name) VALUES (?)");
-                    $create->execute([$name]);
+                    $create = $bdd->prepare("INSERT INTO catalogue(name, date_creation) VALUES (?,?)");
+                    $create->execute([$name, time()]);
                     // SUCCESS
                     $GLOBALS['affi_erreur'] = ['button' => TRUE, 'text' => 'Le catalogue <b>' . $name . '</b> à bien été crée.', 'type' => 'success'];
                 } else {

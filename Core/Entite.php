@@ -10,13 +10,17 @@ namespace CATA;
  * MàJ:
  * [2020-01-09] Mise a jour des commentaire de Code
  * 
+ * @param array $donnees Tableau d'hydration d'objet enfant
+ * 
  */
-abstract class Entite {
+abstract class Entite
+{
 
     protected $_erreur = FALSE; // Classe en erreur = TRUE
     protected $_erreur_msg; // Message d'erreur de la Classe
 
-    public function __construct($donnees) {
+    public function __construct($donnees)
+    {
         if (!is_null($donnees)) {
             foreach ($donnees as $key => $value) {
                 // On récupère le nom du setter correspondant à l'attribut.
@@ -38,12 +42,14 @@ abstract class Entite {
             $this->_erreur_msg = 'Erreur de construction de l\'object';
         }
     }
-    
-    protected function SetErreur(){
+
+    protected function SetErreur()
+    {
         $this->_erreur = true;
     }
 
-    protected function setErreurMsg($m) {
+    protected function setErreurMsg($m)
+    {
         $this->_erreur_msg = $m;
     }
 
@@ -51,7 +57,8 @@ abstract class Entite {
      * ErreurMsg - Retourne le message d'erreur courant
      * @return string
      */
-    public function ErreurMsg(){
+    public function ErreurMsg()
+    {
         return $this->_erreur_msg;
     }
 
@@ -59,7 +66,8 @@ abstract class Entite {
      * Erreur - Retourne si la classe est en Erreur
      * @return bool
      */
-    public function Erreur() {
+    public function Erreur()
+    {
         return $this->_erreur;
     }
 
