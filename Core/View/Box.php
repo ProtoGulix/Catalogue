@@ -15,12 +15,14 @@ use CATA\Entite;
  *
  * @author Quentin
  */
-class Box extends Entite {
+class Box extends Entite
+{
 
     protected $_bloc;
     protected $_ratio;
 
-    protected function SetBloc(object $b) {
+    protected function SetBloc(object $b)
+    {
         if (is_object($b)) {
             $this->_bloc = $b;
         } else {
@@ -29,7 +31,8 @@ class Box extends Entite {
         }
     }
 
-    protected function SetRatio($r) {
+    protected function SetRatio($r)
+    {
         if (!is_null($r) or $r < 1) {
             $this->_ratio = $r;
         } else {
@@ -38,7 +41,8 @@ class Box extends Entite {
         }
     }
 
-    public function View() {
+    public function View()
+    {
 
         $l = round(intval($this->_bloc->Left()) * $this->_ratio) - 5;
         $t = round(intval($this->_bloc->Top()) * $this->_ratio) - 5;
@@ -47,7 +51,7 @@ class Box extends Entite {
 
         $style = 'position: absolute; left: ' . $l . 'px; top: ' . $t . 'px; width: ' . $w . 'px; height: ' . $h . 'px;';
 
-        return '<div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '" style="' . $style . '"></div>';
+        return '<a href="#' .  $this->_bloc->BlockNum() . '"><div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '" style="' . $style . '"></div></a>';
     }
 
     //put your code here

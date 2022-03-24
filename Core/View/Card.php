@@ -9,15 +9,29 @@ use CATA\Entite;
  * 
  * @author Quentin CELLE
  * 
+ * MàJ:
+ * [2022-03-18] Ajout des Function et variable Class et ID
+ * 
  */
 class Card extends Entite
 {
 
     protected $_id; // ID HTML pour l'utilisation du Script DataTable
+    protected $_class; // Class HTML
     protected $_icone; // Icone
     protected $_header; // Header
     protected $_footer; // Footer
     protected $_content; // Contenue
+
+    protected function SetId($i)
+    {
+        $this->_id = 'id="' . $i . '"';
+    }
+
+    protected function SetClass($c)
+    {
+        $this->_class = $c;
+    }
 
     /**
      * SetHeader - Hydradation de l'Icone
@@ -78,7 +92,7 @@ class Card extends Entite
             }
 
             // Génération du code HTML
-            $html = '<div class="card mb-3">' . $header . '<div class="card-body">' . $this->_content . '</div>' . $footer . '</div>';
+            $html = '<div class="card mb-3 border-0 shadow ' . $this->_class . '" ' . $this->_id . '>' . $header . '<div class="card-body">' . $this->_content . '</div>' . $footer . '</div>';
             return $html;
         } else {
             return $this->_erreur_msg;

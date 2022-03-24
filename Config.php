@@ -6,13 +6,6 @@ namespace CATA;
 include 'Core/Autoloader.php';
 Autoloader::register();
 
-echo '<link rel="stylesheet" href="vendor/bootstrap/4.0.0/css/bootstrap.min.css">';
-echo '<script src="vendor/bootstrap/5.0.2/js/bootstrap.min.js"></script>';
-echo '<script src="vendor/jquery/jquery.min.js"></script>';
-echo '<script src="vendor/jquery.imagemapster.min.js"></script>';
-echo '<link rel="stylesheet" href="vendor/style.css">';
-
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -20,6 +13,8 @@ echo '<link rel="stylesheet" href="vendor/style.css">';
 
 $dsn = 'mysql:host=localhost;dbname=catalogue;charset=utf8';
 $username = 'root';
+
+$racine = 'https://localhost/Catalogue/';
 
 $pays = ['France', 'Allemagne', 'Protugal', 'Japon', 'Corée', 'Irland'];
 /*

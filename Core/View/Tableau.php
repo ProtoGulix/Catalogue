@@ -12,9 +12,11 @@ use CATA\Entite;
  * @author Quentin CELLE TA68
  * 
  */
-class Tableau extends Entite {
+class Tableau extends Entite
+{
 
     protected $_id; // ID HTML pour l'utilisation du Script DataTable
+    protected $_class; // Class CSS
     protected $_header; // Header du tableau
     protected $_content; // Contenue
 
@@ -22,20 +24,27 @@ class Tableau extends Entite {
      * SetID - Renseigement de l'id HTML du tableau pour l'utilisation de script JS
      * @param string $i Id du tableau
      */
-    protected function setId($i) {
+    protected function setId($i)
+    {
         // Si un icone est definit on filtre le HTML
         if (is_string($i)) {
-            $this->_id = 'id="' . htmlentities($i) . '"';
+            $this->_id = htmlentities($i);
         } else { // Si non on definie une valeur par défaut 
-            $this->_id = 'id="#"';
+            $this->_id = '#';
         }
+    }
+
+    protected function setClass($c)
+    {
+        $this->_class = $c;
     }
 
     /**
      * SetHeader - Hydradation des Entete de Colonne du tableau
      * @param array $h Tableau des entete !!! LE NOMBRE D'ENTETE DOIT CORRESPONDRE AU NOMBRE DE COLONNE DU TABLEAU !!!
      */
-    protected function setHeader(array $h) {
+    protected function setHeader(array $h)
+    {
 
         // Controle du type de valeur
         if (is_array($h)) {
@@ -57,7 +66,8 @@ class Tableau extends Entite {
      * SetContent - Hydratation des lignes du contenu du tableau
      * @param array $c Tableau a deux dimention Array[Array,Array,Array]
      */
-    protected function setContent($c) {
+    protected function setContent($c)
+    {
 
         if (!empty($c)) {
             foreach ($c as $key) {
@@ -87,7 +97,8 @@ class Tableau extends Entite {
      * View - Génération du code HTML pour l'affichage du tableau
      * @return string HTML du tableau
      */
-    public function View() {
+    public function View()
+    {
 
         $body = '<tr><td>Une erreur est survenue !<td></tr>'; // Message d'erreur
         $header = NULL; // INITIALISATION du header
@@ -104,14 +115,16 @@ class Tableau extends Entite {
                 $body = '<tbody>' . $this->_content . '</tbody>';
             }
             // Hydration du tableau avec les valeur généré
-            $tableau = '<div class="card mt-3"><div class="table-responsive">'
-                    . '<table class="table table-hover" ' . $this->_id . ' width="100%" cellspacing="0" id="TableauHover">'
-                    . $header . $body . $footer
-                    . '</table>'
-                    . '</div></div>';
+            $tableau = '<div class="table-responsive">'
+                . '<table class="table table-hover" ' . $this->_id . ' width="100%" cellspacing="0" id="TableauHover">'
+                . $header . $body . $footer
+                . '</table>'
+                . '</div>';
         }
 
-        return $tableau;
-    }
+        $card = new \CATA\View\Card(['content' => $tableau, 'id' => $this->_id, 'class' => $this->_class]);
 
+        // ID pagee-image
+        return $card->View();
+    }
 }

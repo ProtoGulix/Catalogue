@@ -1,4 +1,5 @@
 <?php
+
 include 'Config.php';
 include 'Gestionnaire.php';
 
@@ -13,46 +14,56 @@ include 'Gestionnaire.php';
 <html>
 
 <head>
-    <link rel="stylesheet" href="vendor/bootstrap/5.0.2/css/bootstrap.min.css">
-    <script src="vendor/bootstrap/5.0.2/js/bootstrap.min.js"></script>
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <link rel="stylesheet" href="vendor/style.css">
+    <link rel="stylesheet" href="template/bootstrap/5.0.2/css/bootstrap.min.css">
+    <script src="template/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="template/style.css">
     <title>Catalogue</title>
+
+    <style>
+        #page-image {
+            overflow: auto;
+            max-height: 400px;
+        }
+    </style>
+
 
 </head>
 
 <body class="bg-light">
-    <header class="p-3 bg-dark text-white">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                </a>
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/Catalogue" class="nav-link px-2 text-white">Home</a></li>
-                    <li><a href="/Catalogue/?page=import" class="nav-link px-2 text-white">Import</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-                </ul>
 
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-                </form>
-
-                <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Login</button>
-                    <button type="button" class="btn btn-warning">Sign-up</button>
+    <div class="container-fluid">
+        <div class="row justify-content-center h-100">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="sticky-top pt-3">
+                    <a href="/Catalogue/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <img src="Image/logo.svg" height="40px" width="40px" />
+                        <span class="fs-4">Catalogue</span>
+                    </a>
+                    <hr>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" aria-current="page">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page=import" class="nav-link text-white">
+                                Import
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?page=session" class="nav-link text-white">
+                                Session
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+            </nav>
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-3 mt-3">
+                <?php echo $container; ?>
             </div>
         </div>
-    </header>
-
-    <div class="container-lg pt-3">
-        <?php echo $container; ?>
     </div>
 
 </body>

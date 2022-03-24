@@ -39,11 +39,11 @@ class Alerte extends Entite
     {
         $content = '<div class="p2">' . $this->_text . '</div>';
         if (!empty($this->_button)) {
-            $button = '<div class="ms-auto">' . $this->_button->View() . '</div>';
+            $button = '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         } else {
             $button = False;
         }
 
-        return '<div class="alert alert-' . $this->_type . ' d-flex align-items-center mb-3" role="alert">' . $content . $button . '</div>';
+        return '<div class="alert alert-' . $this->_type . ' mb-3 alert-dismissible fade show" role="alert">' . $content . $button . '</div>';
     }
 }

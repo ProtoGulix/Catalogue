@@ -86,13 +86,22 @@ class View extends Entite
     public function View()
     {
 
+        if (isset($_COOKIE['authenticity_token'])) {
+            // Ajout du Token de sécurité
+            $secu = new \CATA\Field\Hidden(['Name' => 'authenticity_token', 'Value' => htmlspecialchars($_COOKIE['authenticity_token']), 'Type' => 'hidden']);
+            $secu_token = $secu->buildHTML();
+        } else {
+            $secu_token = NULL;
+        }
+
         $f_html = NULL;
 
         foreach ($this->_fields as $field) { // On assemble les vues HTML de champ instancié
-            $f_html .= '<div class="form-group">' . $field->buildHTML() . '</div>'; // Génération du HTML de Champ
+            //$f_html .= '<div class="form-group">' . $field->buildHTML() . '</div>'; // Génération du HTML de Champ
+            $f_html .=  $field->buildHTML(); // Génération du HTML de Champ
         }
 
-        return '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+        return '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
     }
 
     //put your code here
