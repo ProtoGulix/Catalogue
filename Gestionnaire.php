@@ -14,25 +14,10 @@
 session_start();
 
 $container = NULL;
-$catalogue = NULL;
-$affi_erreur = NULL;
-
-$page_dir = 'Page/';
-$page_folder = array_slice(scandir($page_dir), 2);
 
 $bdd = new PDO($GLOBALS['dsn'], $GLOBALS['username']);
 
-function ChaineAleatoire($longueur = 10)
-{
-    $caracteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $longueurMax = strlen($caracteres);
-    $chaineAleatoire = '';
-    for ($i = 0; $i < $longueur; $i++) {
-        $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
-    }
-    return $chaineAleatoire;
-}
-
+include 'Core/function.php';  // 
 include 'POST.php';
 
 $query['page'] = 'accueil';
@@ -78,16 +63,19 @@ if (!empty($GLOBALS['affi_erreur'])) {
     $container .= $e->View();
 }
 
-// La variable $page_dir existe-elle dans l'url ?
+
+$page_folder = array_slice(scandir($GLOBALS['dir_page'] . '/'), 2);
+
+// La variable $GLOBALS['dir_page] existe-elle dans l'url ?
 if (!empty($_GET['page'])) {
     if (in_array($_GET['page'] . '.php', $page_folder, True)) {
         // Oui, alors on l'importe
-        include($page_dir . $_GET['page'] . '.php');
+        include($GLOBALS['dir_page'] . '/' . $_GET['page'] . '.php');
     } else {
         // Non, alors on importe un fichier par défaut
-        include($page_dir . 'error-404.php');
+        include($GLOBALS['dir_page'] . '/' . 'error-404.php');
     }
 } else {
     // Non, on affiche la page d'accueil par défaut
-    include($page_dir . 'accueil.php');
+    include($GLOBALS['dir_page'] . '/' . 'accueil.php');
 }

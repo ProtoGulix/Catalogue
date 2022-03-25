@@ -11,8 +11,10 @@ namespace CATA;
  * [2019-12-27] Suppression d'un bug mineur sur la fonction SetExiste
  * [2020-01-10] Ajout de la fonction Copy. 
  * 
+ * @param string $d Chemin absolu du fichier
  */
-class File {
+class File
+{
 
     protected $_dir; // RACINE FICHIER
     protected $_existe = FALSE; // Bool TRUE: Existe FALSE: Absent
@@ -24,7 +26,8 @@ class File {
      * @param string $d Chemin du Fichier
      */
 
-    public function __construct($d) {
+    public function __construct($d)
+    {
         $this->setDir($d); // Chemin du fichier
         $this->setExiste(); // Controle de l'existance du fichier
         $this->setDateModif(); // Date de modification du fichier
@@ -35,7 +38,8 @@ class File {
      * SetDIR - Hydrate le chemin d'acces du fichier
      * @param string $d Implemente le chemin du fichier
      */
-    protected function setDir($d) {
+    protected function setDir($d)
+    {
         $this->_dir = $d;
     }
 
@@ -43,7 +47,8 @@ class File {
      * DIR - Retourne le chemin du fichier
      * @return string Chemin du fichier
      */
-    public function Dir() {
+    public function Dir()
+    {
         return $this->_dir;
     }
 
@@ -51,10 +56,11 @@ class File {
      * SetExiste - Hydrate et controle la présence du fichier
      * Controle l'existance du fichier. Si vrais la variable _existe = TRUE
      */
-    protected function setExiste() {
+    protected function setExiste()
+    {
 
         // Si le chemin n'a pas été renseigné et que ce n'est pas un Object
-        if (!empty($this->_dir) AND ! is_object($this->_dir)) {
+        if (!empty($this->_dir) and !is_object($this->_dir)) {
             // Contrôle de l'existance du fichier
             $this->_existe = file_exists($this->_dir);
         }
@@ -64,7 +70,8 @@ class File {
      * Existe - Retourne un Bool 
      * @return bool TRUE si le fichier existe
      */
-    public function Existe() {
+    public function Existe()
+    {
         return $this->_existe;
     }
 
@@ -72,7 +79,8 @@ class File {
      * SetDATEMODIF - Récupére la date de modification du fichier
      * Récupére la date de modification du fichier "AAAA-MM-JJ HH:MM:SS"
      */
-    public function setDateModif() {
+    public function setDateModif()
+    {
         // Si le fichier existe
         if ($this->_existe) {
             // récupération de la date de modification du fichier mise au format AAAA-MM-JJ hh:mm:ss
@@ -86,7 +94,8 @@ class File {
      * DATEMODIF - Retourne la date de modification du fichier
      * @return string Date de modification du fichier
      */
-    public function DateModif() {
+    public function DateModif()
+    {
         return 'Mise à jour : ' . $this->_date_modif;
     }
 
@@ -94,7 +103,8 @@ class File {
      * TYPE - Determination du type de fichier
      * @return string type MIME du fichier séléctionné
      */
-    protected function setType() {
+    protected function setType()
+    {
         // Si le fichier existe
         if ($this->_existe) {
             $mime = mime_content_type($this->_dir); // Récupération du Type MIME
@@ -102,14 +112,17 @@ class File {
             $this->_type = $t; // Hydratation de la variable
         }
     }
-    
-    public function Type(){
+
+    public function Type()
+    {
         return $this->_type;
     }
 
-    public function Copier($dest) {
-        if (!copy($this->_dir, $dest)) {
-            echo "La copie du fichier $this->_dir vers $dest a échoué...\n";
+    public function Move($dest)
+    {
+        if (rename($this->_dir, $dest)) {
+            $this->_dir = $dest;
+            return TRUE;
         }
     }
 

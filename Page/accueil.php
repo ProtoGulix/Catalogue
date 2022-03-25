@@ -11,6 +11,5 @@ while ($data_c = $c->fetch(PDO::FETCH_ASSOC)) {
     }
 
     $catalogue = new \CATA\Catalogue\Catalogue(['Id' => $data_c['id'], 'Name' => $data_c['name'], 'Page' => $list_page, 'NbPage' => $data_c['nb_page']]);
-    $view_c = new \CATA\View\Catalogue(['catalogue' => $catalogue]);
-    $container .= $view_c->View();
+    $container .= $catalogue->View();
 }

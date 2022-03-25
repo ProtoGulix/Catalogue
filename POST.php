@@ -30,7 +30,7 @@ if ($session->Check()) {
                     $page = NULL;
                 }
 
-                $path = 'temps/' . $folder; // Chemin du repertoire
+                $path = $GLOBALS['dir_temp'] . '/' . $folder; // Chemin du repertoire
 
                 /**
                  * Si le repertoire existe
@@ -46,15 +46,19 @@ if ($session->Check()) {
                         if (empty($test_page->fetch())) {
                             // Création de la page
                             try {
-                                $page_query = "INSERT INTO page(id_catalogue, numero, image) VALUES (?, ?, ?)";
+                                $page_query = "INSERT INTO page(id_catalogue, numero, image, thumb) VALUES (?, ?, ?, ?)";
                                 $page = $bdd->prepare($page_query); // Préparation de la requéte
-                                $image = $path . '/' . $folder . '-' . $p . '.jpg'; // Chemin d'origine du fichier
+                                //$image = $path . '/' . $folder . '-' . $p . '.jpg'; // Chemin d'origine du fichier
                                 $image_out = ChaineAleatoire(60) . '.jpg'; // Nouveau nom du fichier
-                                $dir_out = $GLOBALS['dir_image_page'] . '/' .  $image_out; // Nouveaux chemin du fichier
+                                // $dir_out = $GLOBALS['dir_image_page'] . '/' .  $image_out; // Nouveaux chemin du fichier
+
+                                $i = new \CATA\Document\Image($path . '/' . $folder . '-' . $p . '.jpg');
 
                                 // Si le fichier est deplacer on execute la requete
-                                if (rename($image, $dir_out)) {
-                                    $page->execute([$catalogue, $p, $image_out]);
+                                if ($i->Existe() && $i->Move($GLOBALS['dir_image_page'] . '/' .  $image_out)) {
+                                    $t_image = ChaineAleatoire(60) . '.jpg';
+                                    $i->Resize($GLOBALS['dir_image_page'] . '/' . $t_image, 200, 200);
+                                    $page->execute([$catalogue, $p, $image_out, $t_image]);
                                 } else {
                                     echo 'erreur deplacement fichier image';
                                 }

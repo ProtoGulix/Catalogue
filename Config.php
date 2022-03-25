@@ -16,6 +16,8 @@ $username = 'root';
 
 $racine = 'https://localhost/Catalogue/';
 
+$dir_page = 'Page';
+$dir_temp = 'temps';
 $dir_image = 'Image';
 $dir_image_page = 'Image/page';
 

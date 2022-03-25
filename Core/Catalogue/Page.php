@@ -25,6 +25,7 @@ class Page extends Entite
     private $_ratio = 1; // Ratio d'affichage
     private $_bloc; // Liste des blocs sous forme d'objet \CATA\Catalogue\Bloc
     private $_image; // Objet \CATA\Document\Image
+    private $_thumb; // Objet \CATA\Document\Image
 
     /**
      * Set ID
@@ -74,6 +75,19 @@ class Page extends Entite
         }
     }
 
+    protected function setThumb($i)
+    {
+        $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
+        $image = new \CATA\Document\Image($i_dir);
+
+        if ($image->Existe() && $image->Type() == 'jpeg') {
+            $this->_thumb = $image;
+        } else {
+            $this->_erreur = true;
+            $this->_erreur_msg = 'Erreur: l\'illustration séléctionné n\'est pas valide.';
+        }
+    }
+
     protected function SetRatio($r)
     {
         $this->_ratio = floatval($r);
@@ -96,7 +110,7 @@ class Page extends Entite
 
     public function ViewThumb()
     {
-        return $this->_image->View(0.1);
+        return $this->_thumb->View();
     }
 
     /**
@@ -128,7 +142,7 @@ class Page extends Entite
             ];
         }
 
-        $table = new \CATA\View\Tableau(['Header' => ['#', 'Bloc'], 'Content' => $t, 'id' => 'page-image']);
+        $table = new \CATA\View\Tableau(['Header' => ['ID', 'Bloc'], 'Content' => $t, 'id' => 'page-image']);
 
         return $table->View();
     }
