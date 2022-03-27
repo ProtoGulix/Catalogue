@@ -138,7 +138,7 @@ class Page extends Entite
             $b = new \CATA\Catalogue\Bloc($bloc);
             $t[] = [
                 'block_num' => $b->BlockNum(),
-                $b->BlockNum(), $b->Text()
+                $b->BlockNum(), $b->Text() . '<a style="float: right;" href="#">edit</a>'
             ];
         }
 

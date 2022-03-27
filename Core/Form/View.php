@@ -29,6 +29,7 @@ use CATA\Entite;
 class View extends Entite
 {
 
+    protected $_header;
     protected $_fields = []; // Tableau de tout les Champ instancié pour le formulaire
     protected $_legend;
     protected $_titre;
@@ -36,6 +37,10 @@ class View extends Entite
     protected $_cible;
     protected $_name;
 
+    public function SetHeader($h)
+    {
+        $this->_header = $h;
+    }
     public function setTitre($titre)
     {
         $this->_titre = '<h1>' . $titre . '</h1>'; // Titre du Formulaire
@@ -75,7 +80,7 @@ class View extends Entite
 
     public function setBouton($bouton)
     {
-        $this->_bouton = '<button type="submit" class="btn btn-primary" >' . $bouton . '</button>';
+        $this->_bouton = '<button type="submit" class="btn btn-primary mt-3" >' . $bouton . '</button>';
     }
 
     public function setCible($cible)
@@ -97,11 +102,13 @@ class View extends Entite
         $f_html = NULL;
 
         foreach ($this->_fields as $field) { // On assemble les vues HTML de champ instancié
-            //$f_html .= '<div class="form-group">' . $field->buildHTML() . '</div>'; // Génération du HTML de Champ
             $f_html .=  $field->buildHTML(); // Génération du HTML de Champ
         }
 
-        return '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+        $content = '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+
+        $card = new \CATA\View\Card(['header' => $this->_header, 'Content' => $content]);
+        return $card->View();
     }
 
     //put your code here

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace INTRA\View;
+namespace CATA\View;
 
 /**
  * Description of MenuDeroulant
@@ -17,7 +17,8 @@ namespace INTRA\View;
  *  [2020-10-22] Création
  *  [2020-10-24] Ajout de commentaire dans le Code
  */
-class MenuDeroulant {
+class MenuDeroulant
+{
 
     protected $_titre;
     protected $_data; // Liste de genres
@@ -29,7 +30,8 @@ class MenuDeroulant {
      * @param type $path Chemin d'accÃ©s au fichier JSON
      * @param array $query Tableau de requette contenent la ligne ['Genres']
      */
-    public function __construct($titre, $data, $query) {
+    public function __construct($titre, $data, $query)
+    {
 
         $this->_titre = ucwords($titre); // Titre du menu déroulant
         $this->_query = $query; // Propagateur Query
@@ -40,20 +42,21 @@ class MenuDeroulant {
      * ButtomView - Retourne le code du bonton principale  
      * @return string HTML
      */
-    private Function ButtonView() {
+    private function ButtonView()
+    {
 
         // Affichage du Nom de la séléction si ID trouvé dans le Propagateur
         foreach ($this->_data as $value) {
             if ($this->_query['id'] == $value['id']) {
                 $genre = ' : ' . $value['name'];
                 break;
-            }else{
+            } else {
                 $genre = NULL;
             }
         }
-        
+
         // On retroune le code du Bouton avec le Nom de de l'ID correspondant
-        $html = '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'. $this->_titre . $genre . ' </button>';
+        $html = '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $this->_titre . $genre . ' </button>';
         return $html;
     }
 
@@ -61,8 +64,9 @@ class MenuDeroulant {
      * ListView - Retourne le code des éléments du déroulant du menu
      * @return string HTML
      */
-    private function ListView() {
-        
+    private function ListView()
+    {
+
         $html = NULL; // Initialisation de la Variable
 
         // Boucle d'appele des éléments de la liste
@@ -76,10 +80,10 @@ class MenuDeroulant {
 
             // Hydratation des éléments de la Class Link
             $link_data['text'] = $key['name'];
-            $link_data['Query'] = ['page' => $this->_query['page'],'selection' => 'genre', 'id' => $key['id']];
+            $link_data['Query'] = ['page' => $this->_query['page'], 'selection' => 'genre', 'id' => $key['id']];
             $link_data['class'] = $class;
             // Appel du Link
-            $a_link = new \INTRA\View\Link($link_data);
+            $a_link = new \CATA\View\Link($link_data);
 
             // Ajout aux éléments déjà appeler
             $html .= $a_link->View();
@@ -93,7 +97,8 @@ class MenuDeroulant {
      * View - Viewer de la class
      * @return string HTML
      */
-    public function View() {
+    public function View()
+    {
 
         // Appel des Fonction Bouton et List
         $html = '<div class="dropdown">' . $this->ButtonView() . $this->ListView() . '</div>';
@@ -103,4 +108,3 @@ class MenuDeroulant {
 
     //put your code here
 }
-

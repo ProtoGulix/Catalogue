@@ -1,5 +1,6 @@
 <?php
-
+header('X-Content-Type-Options: nosniff');
+header('X-Powered-By: miladz.eu');
 include 'Config.php';
 include 'Gestionnaire.php';
 
@@ -43,18 +44,18 @@ include 'Gestionnaire.php';
                     <hr>
                     <ul class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
-                            <a href="#" class="nav-link active" aria-current="page">
-                                Home
+                            <a href="http://localhost/Catalogue" class="nav-link active" aria-current="page">
+                                <?php echo MENU_HOME ?>
                             </a>
                         </li>
                         <li>
                             <a href="?page=import" class="nav-link text-white">
-                                Import
+                                <?php echo MENU_IMPORT ?>
                             </a>
                         </li>
                         <li>
                             <a href="?page=session" class="nav-link text-white">
-                                Session
+                                <?php echo MENU_SESSION ?>
                             </a>
                         </li>
                     </ul>

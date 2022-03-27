@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace INTRA\View;
+namespace CATA\View;
 
-use INTRA\Entite;
+use CATA\Entite;
 
 /**
  * Description of Pagination
@@ -19,7 +19,8 @@ use INTRA\Entite;
  *  [2020-10-05] Création
  *  [2020-10-12] Implémentation de la Class Link
  */
-class Pagination Extends Entite {
+class Pagination extends Entite
+{
 
     protected $_parPage; // Nombre d'éléments à afficher dans chaque page.
     protected $_delta; // Nombre de numéros de pages à afficher avant et après celui en cours.
@@ -27,15 +28,16 @@ class Pagination Extends Entite {
     protected $_query;
     protected $_n_page;
 
-    public function __construct($donnees) {
+    public function __construct($donnees)
+    {
         parent::__construct($donnees);
 
         if (!is_null($this->_totalItems)) {
             $this->_n_page = ceil($this->_totalItems / $this->_parPage); // Calcul du nombre de page
         }
 
-        if ($this->_query['index'] == 0) {
-            $this->_query['index'] = 1;
+        if ($this->_query['no'] == 0) {
+            $this->_query['no'] = 1;
         }
     }
 
@@ -43,15 +45,17 @@ class Pagination Extends Entite {
      * SetParPage - Determination du nombre de Film par page
      * @param int $p 
      */
-    protected function SetParPage($p) {
+    protected function SetParPage($p)
+    {
         $this->_parPage = intval($p);
     }
 
     /**
-     * SetDelta - Determine le nombre d'index a affiché autour de la position actuel
+     * SetDelta - Determine le nombre d'no a affiché autour de la position actuel
      * @param int $d
      */
-    protected function SetDelta($d) {
+    protected function SetDelta($d)
+    {
         $this->_delta = intval($d);
     }
 
@@ -59,7 +63,8 @@ class Pagination Extends Entite {
      * SetTotalItems - Dertermine le nombre total d'items
      * @param type $i
      */
-    protected function SetTotalItems($i) {
+    protected function SetTotalItems($i)
+    {
         $this->_totalItems = $i;
     }
 
@@ -67,60 +72,65 @@ class Pagination Extends Entite {
      * SetQuery - Propagation de la recquette HTTP
      * @param type $q
      */
-    protected function SetQuery($q) {
+    protected function SetQuery($q)
+    {
         $this->_query = $q;
     }
 
-    protected function Precedent() {
-        $this->_query['index'] = $this->_query['index'] - 1;
+    protected function Precedent()
+    {
+        $this->_query['no'] = $this->_query['no'] - 1;
 
-        $data = ['Text' => '<i class="fas fa-angle-double-left"></i>', 'Class' => 'page-link', 'Query' => $this->_query];
-        $link = new \INTRA\View\Link($data);
+        $data = ['Text' => '<i class="fas fa-angle-double-left"><</i>', 'Class' => 'page-link', 'Query' => $this->_query];
+        $link = new \CATA\View\Link($data);
 
         return '<li class="page-item">' . $link->View() . '</li>';
     }
 
-    protected function Suivant() {
-        $this->_query['index'] = $this->_query['index'] + 2;
+    protected function Suivant()
+    {
+        $this->_query['no'] = $this->_query['no'] + 2;
 
-        if ($this->_query['index'] > $this->_n_page) {
-            $this->_query['index'] = $this->_n_page;
+        if ($this->_query['no'] > $this->_n_page) {
+            $this->_query['no'] = $this->_n_page;
         }
 
-        $data = ['Text' => '<i class="fas fa-angle-double-right"></i>', 'Class' => 'page-link', 'Query' => $this->_query];
-        $link = new \INTRA\View\Link($data);
+        $data = ['Text' => '<i class="fas fa-angle-double-right">></i>', 'Class' => 'page-link', 'Query' => $this->_query];
+        $link = new \CATA\View\Link($data);
 
         return '<li class="page-item">' . $link->View() . '</li>';
     }
 
-    protected function Premier() {
+    protected function Premier()
+    {
 
         $query = $this->_query;
-        $query['index'] = 1;
+        $query['no'] = 1;
 
         $active = NULL;
-        if ($this->_query['index'] == $query['index']) {
+        if ($this->_query['no'] == $query['no']) {
             $active = ' active';
         }
 
         $data = ['Text' => '1', 'Class' => 'page-link', 'Query' => $query];
-        $link = new \INTRA\View\Link($data);
+        $link = new \CATA\View\Link($data);
 
         return '<li class="page-item' . $active . '">' . $link->View() . '</li>';
     }
 
-    protected function Dernier() {
+    protected function Dernier()
+    {
 
         $query = $this->_query;
-        $query['index'] = $this->_n_page;
+        $query['no'] = $this->_n_page;
 
         $active = NULL;
-        if ($this->_query['index'] == $query['index']) {
+        if ($this->_query['no'] == $query['no']) {
             $active = ' active';
         }
 
         $data = ['Text' => $this->_n_page, 'Class' => 'page-link', 'Query' => $query];
-        $link = new \INTRA\View\Link($data);
+        $link = new \CATA\View\Link($data);
 
         return '<li class="page-item' . $active . '">' . $link->View() . '</li>';
     }
@@ -129,10 +139,11 @@ class Pagination Extends Entite {
      * 
      * @return type
      */
-    public function View() {
+    public function View()
+    {
 
-        $i_now = intval($this->_query['index']); // Index actuelle de la page
-        // Si la valeur de $index Actuelle (le numéro de la page) est plus grande que $nombreDePages...
+        $i_now = intval($this->_query['no']); // Index actuelle de la page
+        // Si la valeur de $no Actuelle (le numéro de la page) est plus grande que $nombreDePages...
         if ($i_now > $this->_n_page) {
             $i_now = $this->_n_page;
         }
@@ -161,14 +172,14 @@ class Pagination Extends Entite {
                 $active = 'active'; // Passe le lien en "ACTIVE"
             }
 
-            if ($i >= $gauche AND $i <= $droite) {
+            if ($i >= $gauche and $i <= $droite) {
                 //if ($i >= $gauche AND $i <= $droite OR $i == 1 OR $i == $this->_n_page) {
 
                 $new_query = $this->_query;
-                $new_query['index'] = $i;
+                $new_query['no'] = $i;
 
                 $data = ['Text' => $i, 'Class' => 'page-link', 'Query' => $new_query];
-                $link = new \INTRA\View\Link($data);
+                $link = new \CATA\View\Link($data);
 
                 $li .= '<li class="page-item ' . $active . '">' . $link->View() . '</li>';
                 $delta = TRUE;

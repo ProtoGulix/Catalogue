@@ -21,7 +21,10 @@ $dir_temp = 'temps';
 $dir_image = 'Image';
 $dir_image_page = 'Image/page';
 
+$type_page = ['Inconue', 'Couverture', 'Index', ];
+
 $pays = ['France', 'Allemagne', 'Protugal', 'Japon', 'Corée', 'Irland'];
+
 /*
 $Dat[0] = ['Table' => 'TextLong', 'Label' => 'Message', 'Name' => 'msg', 'Value' => 'Ecrie ici ton message', 'Cols' => 60, 'Rows' => 6];
 $Dat[1] = ['Table' => 'Text', 'Label' => 'Titre', 'Name' => 'titre', 'Value' => 'Donne un titre a ton message', 'Type' => 'text', 'Size' => 60];

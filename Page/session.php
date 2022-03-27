@@ -9,5 +9,5 @@ if ($session->Check()) {
     $container .= 'Bonjour ' . htmlspecialchars($_COOKIE['authenticity_token']) . '!</br>';
     $container .= $session->Time() / 60 . 'minutes';
 } else {
-    $container .= 'Aucune session active trouvé ! <a href="?page=session&id=quentin">Connexion</a>';
+    $container .= 'Aucune session active trouvé ! <a href="?page=session">Connexion</a>';
 }

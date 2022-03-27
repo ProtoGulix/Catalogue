@@ -1,8 +1,8 @@
 <?php
 
-namespace INTRA\View;
+namespace CATA\View;
 
-use INTRA\Entite;
+use CATA\Entite;
 
 /**
  * Description de Image
@@ -14,7 +14,8 @@ use INTRA\Entite;
  *  [2020-10-22] Mise à jour des Fonction View et ViewCard pour l'intégration à la Class Catalogue 
  * 
  */
-class Media extends Entite {
+class Media extends Entite
+{
 
     protected $_image; // Object Image
     protected $_footer; // Footer
@@ -27,9 +28,10 @@ class Media extends Entite {
      * SetImage - Recupération de l'objet
      * @param object $i Object de type image
      */
-    protected function SetImage($i) {
+    protected function SetImage($i)
+    {
         // Si c'est une class Image
-        if (get_class($i) == 'INTRA\Photo\Image') {
+        if (get_class($i) == 'CATA\Photo\Image') {
             $this->_image = $i;
             // Si il y a un titre a affiché
             if (!is_null($i->Titre())) {
@@ -44,7 +46,8 @@ class Media extends Entite {
      * SetFooter - Hydradation du Footer
      * @param string $f 
      */
-    protected function setFooter($f) {
+    protected function setFooter($f)
+    {
         $this->_footer = $f;
     }
 
@@ -52,7 +55,8 @@ class Media extends Entite {
      * SetZoom - Activation de la fonction zoom pour les images en haute definition
      * @param bool $z Description
      */
-    protected function SetZoom($z) {
+    protected function SetZoom($z)
+    {
         if (is_bool($z)) {
             $this->_zoom = $z;
         } else {
@@ -60,14 +64,16 @@ class Media extends Entite {
         }
     }
 
-    protected function SetLink($l) {
+    protected function SetLink($l)
+    {
         $this->_link = NULL;
         if (!empty($l)) {
             $this->_link = $l;
         }
     }
 
-    protected function SetIcone(bool $i) {
+    protected function SetIcone(bool $i)
+    {
         if (is_bool($i) && $i) {
             $this->_icone = $i;
         }
@@ -77,7 +83,8 @@ class Media extends Entite {
      * View - Génération du code HTML pour l'affichage du Bloc Image
      * @return string
      */
-    public function ViewCard() {
+    public function ViewCard()
+    {
 
         $i = $this->_image; // Object Image
         $class = NULL; // Initialisation de la class CSS
@@ -109,7 +116,8 @@ class Media extends Entite {
         }
     }
 
-    public function ViewJour() {
+    public function ViewJour()
+    {
 
         $i = $this->_image; // Object Image  
         $icone = NULL;
@@ -127,15 +135,15 @@ class Media extends Entite {
             }
 
             $html = '<div class="card-header bg-white row m-0 p-0 mt-2 pb-2">'
-                    . '<div class="col-sm-10 p-0">'. $icone .'<i id="title">'. $titre . '</i></div>'
-                    . '<div class="col-sm-2 p-0"><a href="?page=archive" class="btn btn-info btn-sm ml-auto float-right">Archive</a></div>'
-                    . '</div>'
-                    . '<div class="card bg-secondary text-white mb-3 border-0">'
-                    . '<img class="photo-jour-bg" id="jour" src="' . $i->Thumb() . '" alt="' . $i->Dir() . '">'
-                    . '<div class="col-md-auto p-0 text-center" >'
-                    . '<img class="photo-jour rounded" id="jour" src="' . $i->Dir() . '" alt="' . $i->Dir() . '">'
-                    . '</div>'
-                    . '</div>';
+                . '<div class="col-sm-10 p-0">' . $icone . '<i id="title">' . $titre . '</i></div>'
+                . '<div class="col-sm-2 p-0"><a href="?page=archive" class="btn btn-info btn-sm ml-auto float-right">Archive</a></div>'
+                . '</div>'
+                . '<div class="card bg-secondary text-white mb-3 border-0">'
+                . '<img class="photo-jour-bg" id="jour" src="' . $i->Thumb() . '" alt="' . $i->Dir() . '">'
+                . '<div class="col-md-auto p-0 text-center" >'
+                . '<img class="photo-jour rounded" id="jour" src="' . $i->Dir() . '" alt="' . $i->Dir() . '">'
+                . '</div>'
+                . '</div>';
 
             return $html;
         } else {
@@ -143,7 +151,8 @@ class Media extends Entite {
         }
     }
 
-    public function View() {
+    public function View()
+    {
 
         $i = $this->_image; // Object Image  
         $icone = NULL;
@@ -161,13 +170,13 @@ class Media extends Entite {
             }
 
             $html = '<a href="' . $i->Dir() . '" data-lightbox="example-set" data-title="' . $titre . '">'
-                    . '<div class="card ml-1 mr-1 bg-dark text-white border-0">'
-                    . '<img class ="card-img" style="height: 200px;" src="' . $i->Thumb() . '" alt="' . $i->Dir() . '">'
-                    . '<div class="card-img-overlay">'
-                    . $this->_link
-                    . '<div class="card-title" style="text-shadow: 0 0 10px black;"><p class="titre">' . $icone . $titre . '</p></div></div>'
-                    . '</div>'
-                    . '</a>';
+                . '<div class="card ml-1 mr-1 bg-dark text-white border-0">'
+                . '<img class ="card-img" style="height: 200px;" src="' . $i->Thumb() . '" alt="' . $i->Dir() . '">'
+                . '<div class="card-img-overlay">'
+                . $this->_link
+                . '<div class="card-title" style="text-shadow: 0 0 10px black;"><p class="titre">' . $icone . $titre . '</p></div></div>'
+                . '</div>'
+                . '</a>';
 
             return $html;
         } else {
