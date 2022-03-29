@@ -77,6 +77,7 @@ class Card extends Entite
 
         $header = NULL; // Initialisation du Header
         $footer = NULL; // Initialisation du Footer
+        $content = NULL;
 
         // Si pas d'erreur
         if (!$this->_erreur) {
@@ -91,8 +92,14 @@ class Card extends Entite
                 $footer = '<div class="card-footer small text-muted">' . $this->_footer . '</div>';
             }
 
+            if (!empty($this->_header) or !empty($this->_footer)) {
+                $content = '<div class="card-body" id="otot">' . $this->_content . '</div>';
+            } else {
+                $content = $this->_content;
+            }
+
             // Génération du code HTML
-            $html = '<div class="card mb-3 border-0 shadow ' . $this->_class . '" ' . $this->_id . '>' . $header . '<div class="card-body">' . $this->_content . '</div>' . $footer . '</div>';
+            $html = '<div class="card mb-3 border-0 shadow ' . $this->_class . '" ' . $this->_id . '>' . $header . $content . $footer . '</div>';
             return $html;
         } else {
             return $this->_erreur_msg;

@@ -21,7 +21,13 @@ $dir_temp = 'temps';
 $dir_image = 'Image';
 $dir_image_page = 'Image/page';
 
-$type_page = ['Inconue', 'Couverture', 'Index', ];
+$type_page = ['Inconue', 'Couverture', 'Index',];
+
+/**
+ * BootStrap Value
+ */
+
+$bs_colorval = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
 
 $pays = ['France', 'Allemagne', 'Protugal', 'Japon', 'Corée', 'Irland'];
 

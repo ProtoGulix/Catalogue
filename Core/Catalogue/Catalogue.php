@@ -77,9 +77,7 @@ class Catalogue extends Entite
             }
         }
 
-        $title = '<h4 class="card-title">' . $this->_name . '</h4>';
-        $nbp = '<div class="card-subtitle mb-2 text-muted">' . $this->_nb_page . ' pages(s)</div>';
-        $card = new \CATA\View\Card(['content' => $title . $nbp . $page]);
+        $card = new \CATA\View\Card(['header' => $this->_name, 'content' => $page, 'Footer' => $this->_nb_page]);
         return $card->View();
     }
     //put your code here

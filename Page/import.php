@@ -4,11 +4,14 @@ $home = $GLOBALS['dir_temp']; // Racine du dossier d'importation
 $col1 = NULL;
 $content_form = NULL;
 
+$list_catalogue[0] = F_IMPOR_CATA_SELECT_NEW;
+$list_catalogue = ListCatalogue($bdd);
+
 $select_catalogue = [
     'Table' => 'Selects',
-    'Label' => 'Catalogue',
+    'Label' => F_IMPOR_CATA_SELECT_LABEL,
     'Name' => 'CatalogueValid',
-    'Value' => array_merge([0 => '-- Selectionnez un catalogue --'], ListCatalogue($bdd))
+    'Value' => $list_catalogue
 ];
 
 $session = new \CATA\Session();
@@ -32,6 +35,7 @@ if ($session->Check()) {
                     $hidden = [
                         'Table' => 'Hidden',
                         'Name' => 'FolderValid',
+                        'Label' => F_IMPOR_PAGE_IMPORT,
                         'Value' => $value
                     ];
                     $option = [
@@ -76,4 +80,7 @@ if ($session->Check()) {
 
     $container .= '<div class="row"><div class="col-8">' . $col1 . '</div><div class="col-4">' . $catalogue_form->View() . '</div></div>';
 } else {
+    header('Status: 301 Moved Permanently', false, 301);
+    header('Location: ' . $racine . '?page=session');
+    exit();
 }

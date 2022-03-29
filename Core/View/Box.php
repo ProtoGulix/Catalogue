@@ -51,7 +51,7 @@ class Box extends Entite
 
         $style = 'position: absolute; left: ' . $l . 'px; top: ' . $t . 'px; width: ' . $w . 'px; height: ' . $h . 'px;';
 
-        return '<a href="#' .  $this->_bloc->BlockNum() . '"><div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '" style="' . $style . '"></div></a>';
+        return '<a href="#panels-c' .  $this->_bloc->BlockNum() . '" data-bs-toggle="collapse" aria-controls="panels-c' .  $this->_bloc->BlockNum() . '"><div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '" style="' . $style . '"></div></a>';
     }
 
     //put your code here

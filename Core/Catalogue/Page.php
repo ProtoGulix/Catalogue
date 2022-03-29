@@ -12,6 +12,7 @@ use CATA\Entite;
  * MàJ:
  * [2021-09-21] Création
  * [2022-03-24] Amélioratin des fonction ViewImage, ViewTableau, SetBloc
+ * [2022-03-29] Ajout de la fonction ViewInfo et Changement de l'affichage de la fonction ViewTableau
  * 
  * @param array $data
  * ['id' => int, 'id_catalogue' => int, 'numero' => int, 'ratio' => int, 'bloc' => array Objet Bloc, 'image' =>]
@@ -26,6 +27,9 @@ class Page extends Entite
     private $_bloc; // Liste des blocs sous forme d'objet \CATA\Catalogue\Bloc
     private $_image; // Objet \CATA\Document\Image
     private $_thumb; // Objet \CATA\Document\Image
+    private $_type; // Type de la page Index, Page de garde, ...
+    private $_titre; // Titre de la page via bloc
+    private $_supp; // Supplément d'information sur les bloc
 
     /**
      * Set ID
@@ -57,11 +61,21 @@ class Page extends Entite
         $this->_numero = $n;
     }
 
+    /**
+     * Set BLOC
+     * Tableau des bloc de la page
+     * @param array $n_array
+     */
     protected function setBloc($b_array)
     {
         $this->_bloc = $b_array;
     }
 
+    /**
+     * Set IMAGE
+     * Affecte le chemin absolu du fichier image
+     * @param string $i Nom du fichier image
+     */
     protected function setImage($i)
     {
         $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
@@ -69,12 +83,14 @@ class Page extends Entite
 
         if ($image->Existe() && $image->Type() == 'jpeg') {
             $this->_image = $image;
-        } else {
-            $this->_erreur = true;
-            $this->_erreur_msg = 'Erreur: l\'illustration séléctionné n\'est pas valide.';
         }
     }
 
+    /**
+     * Set THUMB
+     * Affecte le chemin absolu de la miniature
+     * @param string $t Nom du fichier Miniature
+     */
     protected function setThumb($i)
     {
         $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
@@ -82,15 +98,27 @@ class Page extends Entite
 
         if ($image->Existe() && $image->Type() == 'jpeg') {
             $this->_thumb = $image;
-        } else {
-            $this->_erreur = true;
-            $this->_erreur_msg = 'Erreur: l\'illustration séléctionné n\'est pas valide.';
         }
+    }
+
+    protected function setSupp($s_array)
+    {
+        $this->_supp = $s_array;
     }
 
     protected function SetRatio($r)
     {
         $this->_ratio = floatval($r);
+    }
+
+    protected function SetType(int $t)
+    {
+        $this->_type = $t;
+    }
+
+    protected function SetTitre($t)
+    {
+        $this->_titre = $t;
     }
 
     public function Id()
@@ -120,31 +148,61 @@ class Page extends Entite
      */
     public function ViewImage()
     {
-        $bloc = NULL;
-        $w_ratio = round($this->_image->With() * $this->_ratio);
+        $bloc = NULL; // Initialisation
+        $w_ratio = round($this->_image->With() * $this->_ratio); // Calcul du ratio en hauteur
 
+        /** Hydratation des bloc */
         foreach ($this->_bloc as $b) {
             $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b), 'Ratio' => $this->_ratio]);
             $bloc .= $box->View();
         }
 
-        return '<div class="card border p-3 rounded bg-dark text-center" id="page-image"><div class="position-relative m-auto" width="' . $w_ratio . '">' . $this->_image->View($this->_ratio) . $bloc . '</div></div>';
+        return '<div class="card border p-3 rounded bg-dark text-center h-100"><div class="position-relative m-auto" width="' . $w_ratio . '">' . $this->_image->View($this->_ratio) . $bloc . '</div></div>';
     }
 
+    /**
+     * ViewTableau
+     * Retourne un tableau des bloc assigé a cette page
+     * @return string HTML
+     */
     public function ViewTableau()
     {
-        $link =  NULL;
-        foreach ($this->_bloc as $bloc) {
-            $b = new \CATA\Catalogue\Bloc($bloc);
-            $t[] = [
-                'block_num' => $b->BlockNum(),
-                $b->BlockNum(), $b->Text() . '<a style="float: right;" href="#">edit</a>'
-            ];
+
+        for ($i = 0; $i < count($this->_bloc); $i++) {
+            $b = new \CATA\Catalogue\Bloc($this->_bloc[$i]);
+            if (!empty($this->_supp[$i])) {
+                $c = $this->_supp[$i];
+            } else {
+                $c = NULL;
+            }
+            $l[] = ['id' => $b->BlockNum(), 'title' => $b->Text(), 'content' => $c];
+            # code...
         }
 
-        $table = new \CATA\View\Tableau(['Header' => ['ID', 'Bloc'], 'Content' => $t, 'id' => 'page-image']);
+        $line = new \CATA\View\Accordion(['Line' => $l]);
+        return $line->View();
+    }
 
-        return $table->View();
+    /**
+     * ViewInfo
+     */
+    public function ViewInfo()
+    {
+        $t_titre = F_PAGE_TITRE_EMPTY;
+        foreach ($this->_bloc as $v) {
+            if ($v['block_num'] == $this->_titre) {
+                $t_titre = $v['text'];
+            }
+        }
+
+        $titre = '<li class="list-group-item"><h1>' . $t_titre . '</h1></li>';
+        $type = '<li class="list-group-item"><b>' . F_PAGE_TYPE . ' : </b>' . T_PAGE_TYPE[$this->_type] . '</li>';
+        $nb_bloc = '<li class="list-group-item"><b>' . F_PAGE_NBBLOC . ' : </b>' . count($this->_bloc) . '</li>';
+
+        $list = '<ul class="list-group list-group-flush">' . $titre . $type . $nb_bloc . '</ul>';
+
+        $card = new \CATA\View\Card(['Content' => $list]);
+        return $card->View();
     }
 
     //put your code here
