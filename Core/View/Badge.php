@@ -18,12 +18,12 @@ use CATA\Entite;
 class Badge extends Entite
 {
 
-    protected $_text; // Texte
+    protected $_content; // Texte
     protected $_type; //  Primary Secondary Success Danger Warning Info Light Dark 
 
-    public function SetText($t)
+    public function SetContent($t)
     {
-        $this->_text = htmlspecialchars($t);
+        $this->_content = htmlspecialchars($t);
     }
 
     public function SetType($t)
@@ -35,6 +35,6 @@ class Badge extends Entite
 
     public function View()
     {
-        return '<span class="badge bg-' . $this->_type . '">' . $this->_text . '</span>';
+        return '<span class="badge bg-' . $this->_type . '">' . $this->_content . '</span>';
     }
 }

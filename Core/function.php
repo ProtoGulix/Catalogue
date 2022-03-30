@@ -60,6 +60,7 @@ function ListCatalogue($bdd)
 {
     try {
         $data = $bdd->query('SELECT * FROM catalogue');
+        $option_catalogue = NULL;
         while ($r = $data->fetch(PDO::FETCH_ASSOC)) {
             $option_catalogue[$r['id']] = $r['name'];
         }
@@ -67,4 +68,18 @@ function ListCatalogue($bdd)
     } catch (Exception $e) {
         die('Erreur de lecture de la base de donnée');
     }
+}
+
+function CheckBadge($o, $t)
+{
+
+    $badge['content'] = $t;
+    if ($o) {
+        $badge['type'] = 'success';
+    } else {
+        $badge['type'] = 'danger';
+    }
+
+    $b = new \CATA\View\Badge($badge);
+    return $b->View();
 }

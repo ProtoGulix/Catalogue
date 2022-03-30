@@ -69,7 +69,7 @@ class Session
             // Si le jeton du cookie et de la session sont bien les méme
             if ($_COOKIE[$this->c_token_name] == $_SESSION[$this->s_token_name]) {
 
-                if ($this->Time() <= (15 * 60)) {
+                if ($this->Time() <= (15 * 60 * 60)) {
                     return TRUE;
                 } else {
                     $this->Close();

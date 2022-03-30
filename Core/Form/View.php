@@ -48,7 +48,7 @@ class View extends Entite
 
     public function setLegend($legend)
     {
-        $this->_legend = '<p>' . $legend . '</p>'; // Legende du Formulaire
+        $this->_legend = $legend; // Legende du Formulaire
     }
 
     public function setName($n)
@@ -80,7 +80,7 @@ class View extends Entite
 
     public function setBouton($bouton)
     {
-        $this->_bouton = '<button type="submit" class="btn btn-primary mt-3" >' . $bouton . '</button>';
+        $this->_bouton = '<button type="submit" class="btn btn-primary mt-3 ml-3" >' . $bouton . '</button>';
     }
 
     public function setCible($cible)

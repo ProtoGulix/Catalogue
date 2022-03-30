@@ -81,9 +81,7 @@ class Page extends Entite
         $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
         $image = new \CATA\Document\Image($i_dir);
 
-        if ($image->Existe() && $image->Type() == 'jpeg') {
-            $this->_image = $image;
-        }
+        $this->_image = $image;
     }
 
     /**
@@ -96,9 +94,7 @@ class Page extends Entite
         $i_dir = $GLOBALS['dir_image_page'] . '/' . $i;
         $image = new \CATA\Document\Image($i_dir);
 
-        if ($image->Existe() && $image->Type() == 'jpeg') {
-            $this->_thumb = $image;
-        }
+        $this->_thumb = $image;
     }
 
     protected function setSupp($s_array)
@@ -136,9 +132,34 @@ class Page extends Entite
         return $this->_numero;
     }
 
+    public function Titre()
+    {
+        return $this->_titre;
+    }
+
+    public function Type()
+    {
+        return $this->_type;
+    }
+
     public function ViewThumb()
     {
         return $this->_thumb->View();
+    }
+
+    public function Image()
+    {
+        return $this->_image;
+    }
+
+    public function Thumb()
+    {
+        return $this->_thumb;
+    }
+
+    public function Bloc()
+    {
+        return $this->_bloc;
     }
 
     /**
@@ -151,12 +172,13 @@ class Page extends Entite
         $bloc = NULL; // Initialisation
         $w_ratio = round($this->_image->With() * $this->_ratio); // Calcul du ratio en hauteur
 
-        /** Hydratation des bloc */
-        foreach ($this->_bloc as $b) {
-            $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b), 'Ratio' => $this->_ratio]);
-            $bloc .= $box->View();
+        if (!is_null($this->_bloc)) {
+            /** Hydratation des bloc */
+            foreach ($this->_bloc as $b) {
+                $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b), 'Ratio' => $this->_ratio]);
+                $bloc .= $box->View();
+            }
         }
-
         return '<div class="card border p-3 rounded bg-dark text-center h-100"><div class="position-relative m-auto" width="' . $w_ratio . '">' . $this->_image->View($this->_ratio) . $bloc . '</div></div>';
     }
 
@@ -168,19 +190,21 @@ class Page extends Entite
     public function ViewTableau()
     {
 
-        for ($i = 0; $i < count($this->_bloc); $i++) {
-            $b = new \CATA\Catalogue\Bloc($this->_bloc[$i]);
-            if (!empty($this->_supp[$i])) {
-                $c = $this->_supp[$i];
-            } else {
-                $c = NULL;
+        if (!is_null($this->_bloc)) {
+            for ($i = 0; $i < count($this->_bloc); $i++) {
+                $b = new \CATA\Catalogue\Bloc($this->_bloc[$i]);
+                if (!empty($this->_supp[$i])) {
+                    $c = $this->_supp[$i];
+                } else {
+                    $c = NULL;
+                }
+                $l[] = ['id' => $b->BlockNum(), 'title' => $b->Text(), 'content' => $c];
+                # code...
             }
-            $l[] = ['id' => $b->BlockNum(), 'title' => $b->Text(), 'content' => $c];
-            # code...
-        }
 
-        $line = new \CATA\View\Accordion(['Line' => $l]);
-        return $line->View();
+            $line = new \CATA\View\Accordion(['Line' => $l]);
+            return $line->View();
+        }
     }
 
     /**
@@ -189,15 +213,21 @@ class Page extends Entite
     public function ViewInfo()
     {
         $t_titre = F_PAGE_TITRE_EMPTY;
-        foreach ($this->_bloc as $v) {
-            if ($v['block_num'] == $this->_titre) {
-                $t_titre = $v['text'];
+        if (!is_null($this->_bloc)) {
+            foreach ($this->_bloc as $v) {
+                if ($v['block_num'] == $this->_titre) {
+                    $t_titre = $v['text'];
+                }
             }
+            $nb = count($this->_bloc);
+        } else {
+            $nb = 0;
+            $t_titre = NULL;
         }
 
         $titre = '<li class="list-group-item"><h1>' . $t_titre . '</h1></li>';
         $type = '<li class="list-group-item"><b>' . F_PAGE_TYPE . ' : </b>' . T_PAGE_TYPE[$this->_type] . '</li>';
-        $nb_bloc = '<li class="list-group-item"><b>' . F_PAGE_NBBLOC . ' : </b>' . count($this->_bloc) . '</li>';
+        $nb_bloc = '<li class="list-group-item"><b>' . F_PAGE_NBBLOC . ' : </b>' . $nb  . '</li>';
 
         $list = '<ul class="list-group list-group-flush">' . $titre . $type . $nb_bloc . '</ul>';
 
