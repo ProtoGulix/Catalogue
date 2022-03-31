@@ -17,7 +17,6 @@ if (isset($_GET['no']) && isset($_GET['catalogue'])) {
 
         $p = $bdd->query('SELECT * FROM page WHERE id_catalogue=' . $catalogue . ' AND numero=' . $page);
         if ($data_p = $p->fetch(PDO::FETCH_ASSOC)) {
-            $data_p['Ratio'] = 0.35; // Ratio de l'illustration de la page
 
             // Recherche des bloc correspondant
             $data = $bdd->query('SELECT * FROM `bloc` WHERE id_page=' . $data_p['id']);
@@ -43,16 +42,17 @@ if (isset($_GET['no']) && isset($_GET['catalogue'])) {
 
             }
 
-            $link_edit = new \CATA\View\Link(['text' => L_PAGE_EDITION, 'query' => ['page' => 'edit', 'id' => $data_p['id']]]);
-
-            $o_page = new \CATA\Catalogue\Page($data_p); // Hydratation de la page
-
-            $col1 .= $o_page->ViewImage(); // Affichage de l'image avec les bloc
+            $link_edit = new \CATA\View\Link(['text' => L_PAGE_EDITION, 'query' => ['page' => 'editpage', 'id' => $data_p['id']]]);
             $pagination = new \CATA\View\Pagination(['TotalItems' => 60, 'ParPage' => 1, 'Delta' => 2, 'Query' => $query]);
             $text = $link_edit->View() . '<p>Liste des blocs:</p>';
-            $col2 = $pagination->View() . $o_page->ViewInfo() . $text . $o_page->ViewTableau();
+            $o_page = new \CATA\Catalogue\Page($data_p); // Hydratation de la page
 
-            $container .= '<div class="row h-100 pb-3"><div class="col h-100">' . $col1 . '</div><div class="col-4">' . $col2 . '</div>';
+            $col1 .= '<div class="column four wide">' . $pagination->View() . $o_page->ViewImage() . '</div>'; // Affichage de l'image avec les bloc
+
+            $col2 = '<div class="column eleven wide">' . $o_page->ViewInfo() . $text . $o_page->ViewTableau() . '</div>';
+
+            //$container .= '<div class="ui segment">' . $col1 . '' . $col2 . '</div>';
+            $container .= '<div class="ui two column grid">' . $col1 . $col2 . '</div>';
         } else {
             include($GLOBALS['dir_page'] . '/' . 'error-404.php');
         }

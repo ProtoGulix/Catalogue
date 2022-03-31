@@ -76,9 +76,9 @@ class Text extends Field
             $lock = ' readonly';
         }
 
-        $input = '<input class="form-control form-control-sm" ' . $this->_placeholder . $this->_type . ' name="' . $this->_name . '"' . $size . $value . $lock . '>';
+        $input = '<input ' . $this->_placeholder . $this->_type . ' name="' . $this->_name . '"' . $size . $value . $lock . '>';
 
-        return  $label . $input;
+        return  '<div class="field">' . $label . $input . '</div>';
     }
 
     //put your code here

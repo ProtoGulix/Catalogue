@@ -12,3 +12,13 @@ and open the template in the editor.
 div.hover {
     background: green;
 }
+
+#page-image {
+    overflow: auto;
+    max-height: 400px;
+}
+
+.box {
+    position: absolute;
+    visibility: visible;
+}

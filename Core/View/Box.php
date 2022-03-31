@@ -46,12 +46,15 @@ class Box extends Entite
 
         $l = round(intval($this->_bloc->Left()) * $this->_ratio) - 5;
         $t = round(intval($this->_bloc->Top()) * $this->_ratio) - 5;
-        $w = round(intval($this->_bloc->Width()) * $this->_ratio) + 5;
-        $h = round(intval($this->_bloc->Height()) * $this->_ratio) + 5;
+        $w = round(intval($this->_bloc->Width()) * $this->_ratio) + 10;
+        $h = round(intval($this->_bloc->Height()) * $this->_ratio) + 10;
 
-        $style = 'position: absolute; left: ' . $l . 'px; top: ' . $t . 'px; width: ' . $w . 'px; height: ' . $h . 'px;';
+        $style = NULL;
+        //$style = ' style="position: absolute; left: ' . $l . 'px; top: ' . $t . 'px; width: ' . $w . 'px; height: ' . $h . 'px;"';
+        $js = 'data-originleft="' . $this->_bloc->Left() . '" data-origintop="' . $this->_bloc->Top() . '" data-originwidth="' . $this->_bloc->Width() . '" data-originheight="' . $this->_bloc->height() . '"';
+        $div = '<div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '"' . $style . $js . '></div>';
 
-        return '<a href="#panels-c' .  $this->_bloc->BlockNum() . '" data-bs-toggle="collapse" aria-controls="panels-c' .  $this->_bloc->BlockNum() . '"><div class="box border border-primary rounded border-2" id="block-' . $this->_bloc->BlockNum() . '" style="' . $style . '"></div></a>';
+        return '<a href="#panels-c' .  $this->_bloc->BlockNum() . '" data-bs-toggle="collapse" aria-controls="panels-c' .  $this->_bloc->BlockNum() . '">' . $div . '</a>';
     }
 
     //put your code here

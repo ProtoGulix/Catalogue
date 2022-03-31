@@ -105,13 +105,9 @@ class View extends Entite
             $f_html .=  $field->buildHTML(); // Génération du HTML de Champ
         }
 
-        $d['Content'] = '<form ' . $this->_cible . ' method="POST">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+        $d = '<form ' . $this->_cible . ' method="POST" class="ui form">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
 
-        if (!empty($this->_header)) {
-            $d['header'] = $this->_header;
-        }
-        $card = new \CATA\View\Card($d);
-        return $card->View();
+        return $d;
     }
 
     //put your code here

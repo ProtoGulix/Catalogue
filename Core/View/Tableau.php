@@ -115,16 +115,13 @@ class Tableau extends Entite
                 $body = '<tbody>' . $this->_content . '</tbody>';
             }
             // Hydration du tableau avec les valeur généré
-            $tableau = '<div class="table-responsive">'
-                . '<table class="table table-hover" ' . $this->_id . ' width="100%" cellspacing="0" id="TableauHover">'
-                . $header . $body . $footer
-                . '</table>'
-                . '</div>';
+            $tableau = '<table class="ui celled table" ' . $this->_id . '>' . $header . $body . $footer . '</table>';
         }
 
         $card = new \CATA\View\Card(['content' => $tableau, 'id' => $this->_id, 'class' => $this->_class]);
 
         // ID pagee-image
-        return $card->View();
+        //return $card->View();
+        return $tableau;
     }
 }

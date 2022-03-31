@@ -81,10 +81,10 @@ class Pagination extends Entite
     {
         $this->_query['no'] = $this->_query['no'] - 1;
 
-        $data = ['Text' => '<i class="fas fa-angle-double-left"><</i>', 'Class' => 'page-link', 'Query' => $this->_query];
+        $data = ['Text' => '<', 'Class' => 'item', 'Query' => $this->_query];
         $link = new \CATA\View\Link($data);
 
-        return '<li class="page-item">' . $link->View() . '</li>';
+        return $link->View();
     }
 
     protected function Suivant()
@@ -95,10 +95,10 @@ class Pagination extends Entite
             $this->_query['no'] = $this->_n_page;
         }
 
-        $data = ['Text' => '<i class="fas fa-angle-double-right">></i>', 'Class' => 'page-link', 'Query' => $this->_query];
+        $data = ['Text' => '>', 'Class' => 'item', 'Query' => $this->_query];
         $link = new \CATA\View\Link($data);
 
-        return '<li class="page-item">' . $link->View() . '</li>';
+        return $link->View();
     }
 
     protected function Premier()
@@ -112,10 +112,10 @@ class Pagination extends Entite
             $active = ' active';
         }
 
-        $data = ['Text' => '1', 'Class' => 'page-link', 'Query' => $query];
+        $data = ['Text' => '1', 'Class' => 'item ' . $active, 'Query' => $query];
         $link = new \CATA\View\Link($data);
 
-        return '<li class="page-item' . $active . '">' . $link->View() . '</li>';
+        return  $link->View();
     }
 
     protected function Dernier()
@@ -129,10 +129,10 @@ class Pagination extends Entite
             $active = ' active';
         }
 
-        $data = ['Text' => $this->_n_page, 'Class' => 'page-link', 'Query' => $query];
+        $data = ['Text' => $this->_n_page, 'Class' => 'item ' . $active, 'Query' => $query];
         $link = new \CATA\View\Link($data);
 
-        return '<li class="page-item' . $active . '">' . $link->View() . '</li>';
+        return $link->View();
     }
 
     /**
@@ -178,10 +178,10 @@ class Pagination extends Entite
                 $new_query = $this->_query;
                 $new_query['no'] = $i;
 
-                $data = ['Text' => $i, 'Class' => 'page-link', 'Query' => $new_query];
+                $data = ['Text' => $i, 'Class' => 'item', 'Query' => $new_query];
                 $link = new \CATA\View\Link($data);
 
-                $li .= '<li class="page-item ' . $active . '">' . $link->View() . '</li>';
+                $li .= $link->View();
                 $delta = TRUE;
             } else {
                 if ($delta) {
@@ -191,7 +191,7 @@ class Pagination extends Entite
             }
         }
 
-        return '<nav aria-label="Page navigation"><ul class="pagination justify-content-end">' . $this->Precedent() . $this->Premier() . $li . $this->Dernier() . $this->Suivant() . '</ul></nav>';
+        return '<div class="ui pagination menu">' . $this->Precedent() . $this->Premier() . $li . $this->Dernier() . $this->Suivant() . '</div>';
     }
 
     //put your code here

@@ -54,7 +54,7 @@ if ($session->Check()) {
                                 // Si le fichier est deplacer on execute la requete
                                 if ($i->Existe() && $i->Move($GLOBALS['dir_image_page'] . '/' .  $image_full)) {
                                     $image_thumb = ChaineAleatoire(60) . '.jpg';
-                                    $i->Resize($GLOBALS['dir_image_page'] . '/' . $image_thumb, 200, 200);
+                                    $i->Resize($GLOBALS['dir_image_page'] . '/' . $image_thumb, 400, 400);
                                     $page->execute([$catalogue, $page_no, $image_full, $image_thumb]);
                                     $test_page = $bdd->query('SELECT * FROM page WHERE id_catalogue=' . $catalogue . ' AND numero=' . $page_no);
                                     $data_page = $test_page->fetch(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ if ($session->Check()) {
                                 $b['text'] .= $value['text'] . ' '; // Texte
                             } else {
                                 if (!is_null($b) and $b['conf'] > 50) {
-                                    $b['text'] = $b['text'];
+                                    $b['text'] = trim($b['text']);
 
                                     $test_bloc = $bdd->query('SELECT * FROM bloc WHERE id_catalogue=' . $catalogue . ' AND page=' . $page_no . ' AND block_num=' . $b['block_num']);
 

@@ -20,6 +20,8 @@ class Catalogue extends Entite
     protected $_name; // Nom du catalogue
     protected $_page; // 
     protected $_nb_page;
+    protected $_date_modif;
+    protected $_date_creation;
 
     protected function SetId($i)
     {
@@ -39,6 +41,16 @@ class Catalogue extends Entite
     protected function SetNbPage($n)
     {
         $this->_nb_page = $n;
+    }
+
+    protected function SetDateCreation($dc)
+    {
+        $this->_date_creation = $dc;
+    }
+
+    protected function SetDateModif($dm)
+    {
+        $this->_date_modif = $dm;
     }
 
     public function Id()
@@ -64,21 +76,27 @@ class Catalogue extends Entite
     public function View()
     {
 
-        if (count($this->_page) <= 0) {
+        if (empty($this->_page)) {
             $page = 'Aucune page trouvé !';
         } else {
             $page = NULL;
             foreach ($this->_page as $value) {
 
-                $query = ['page' => 'page', 'catalogue' => $this->_id, 'no' => $value->Numero()];
-                $link = new \CATA\View\Link(['text' => $value->ViewThumb(), 'query' => $query]);
-                $page .= $link->View();
+                $page .= $value->ViewMini();
+                //$page .=  $card->View();
+
                 // code...
             }
         }
 
-        $card = new \CATA\View\Card(['header' => $this->_name, 'content' => $page, 'Footer' => $this->_nb_page]);
-        return $card->View();
+        return '<div class="ui grid">' . $page . '</div>';
+        //return '<div class="ui cards">' . $page . '</div>';
+    }
+
+    public function Info()
+    {
+
+        $titre = '<h1>' . $this->_name . '</h1>';
     }
     //put your code here
 }

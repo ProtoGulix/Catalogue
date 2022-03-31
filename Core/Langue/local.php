@@ -1,6 +1,5 @@
 <?php
 
-
 /** Menu */
 define('MENU_HOME', 'Accueil');
 define('MENU_IMPORT', 'Importation');
@@ -20,7 +19,7 @@ define('B_IMPORT_CATA', '');
 
 
 /** PAGE */
-define('T_PAGE_TYPE', ['Inconnue', 'Page de garde', 'Index', 'Folio']);
+define('T_PAGE_TYPE', ['Inconnue', 'Page de garde', 'Index', 'Illustration', 'Description']);
 define('F_PAGE_TYPE', 'Type');
 define('F_PAGE_NBBLOC', 'Nombre de bloc');
 define('F_PAGE_TITRE', 'Titre');

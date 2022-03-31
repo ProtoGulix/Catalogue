@@ -22,6 +22,7 @@ class Card extends Entite
     protected $_header; // Header
     protected $_footer; // Footer
     protected $_content; // Contenue
+    protected $_image; // Image
 
     protected function SetId($i)
     {
@@ -51,7 +52,7 @@ class Card extends Entite
      */
     protected function setHeader($h)
     {
-        $this->_header = $h;
+        $this->_header = '<div class="header">' . $h . '</div>';
     }
 
     /**
@@ -60,7 +61,7 @@ class Card extends Entite
      */
     protected function setFooter($f)
     {
-        $this->_footer = $f;
+        $this->_footer = '<div class="extra content">' . $f . '</div>';
     }
 
     /**
@@ -70,6 +71,11 @@ class Card extends Entite
     protected function setContent($c)
     {
         $this->_content = $c;
+    }
+
+    protected function setImage($i)
+    {
+        $this->_image = '<div class="image">' . $i . '</div>';
     }
 
     public function View()
@@ -82,24 +88,8 @@ class Card extends Entite
         // Si pas d'erreur
         if (!$this->_erreur) {
 
-            // Si le Header est présent
-            if (!empty($this->_header)) {
-                $header = '<div class="card-header">' . $this->_icone . $this->_header . '</div>';
-            }
-
-            // Si le Footer et présent
-            if (!empty($this->_footer)) {
-                $footer = '<div class="card-footer small text-muted">' . $this->_footer . '</div>';
-            }
-
-            if (!empty($this->_header) or !empty($this->_footer)) {
-                $content = '<div class="card-body" id="otot">' . $this->_content . '</div>';
-            } else {
-                $content = $this->_content;
-            }
-
             // Génération du code HTML
-            $html = '<div class="card mb-3 border-0 shadow ' . $this->_class . '" ' . $this->_id . '>' . $header . $content . $footer . '</div>';
+            $html = '<div class="ui card ' . $this->_class . '" ' . $this->_id . '>' . $this->_image . '<div class="content">' . $this->_header . $this->_content . '</div>' .  $this->_footer . '</div>';
             return $html;
         } else {
             return $this->_erreur_msg;

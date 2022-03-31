@@ -101,18 +101,19 @@ class Image extends File
         return $image_o;
     }
 
-    public function View(float $s = 1)
+    public function View($s)
     {
 
-        $width = 'width="' . $this->_width . '"';
-        $height = 'height="' . $this->_height . '"';
-
-        if ($s > 0) {
-            $width = 'width="' . $this->_width * floatval($s) . '"';
-            $height = 'height="' . $this->_height * floatval($s) . '"';;
+        if (!empty($s)) {
+            $width = 'width="' . $s . '"';
+            $height = NULL;
+        } else {
+            $width = NULL;
+            $height = NULL;
         }
 
-        $balise = '<img ' . $width . $height . ' src="' . $this->_dir . '"/>';
+
+        $balise = '<img id="illustration" class="ui fluid image" ' . $width . $height . ' src="' . $this->_dir . '"/>';
 
         return $balise;
     }

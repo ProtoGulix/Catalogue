@@ -144,7 +144,7 @@ class Page extends Entite
 
     public function ViewThumb()
     {
-        return $this->_thumb->View();
+        return $this->_thumb->View('100px');
     }
 
     public function Image()
@@ -175,11 +175,11 @@ class Page extends Entite
         if (!is_null($this->_bloc)) {
             /** Hydratation des bloc */
             foreach ($this->_bloc as $b) {
-                $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b), 'Ratio' => $this->_ratio]);
+                $box = new \CATA\View\Box(['Bloc' => new \CATA\Catalogue\Bloc($b)]);
                 $bloc .= $box->View();
             }
         }
-        return '<div class="card border p-3 rounded bg-dark text-center h-100"><div class="position-relative m-auto" width="' . $w_ratio . '">' . $this->_image->View($this->_ratio) . $bloc . '</div></div>';
+        return '<div style="position: relative;">' . $this->_image->View('100%') . $bloc . '</div>';
     }
 
     /**
@@ -225,14 +225,21 @@ class Page extends Entite
             $t_titre = NULL;
         }
 
-        $titre = '<li class="list-group-item"><h1>' . $t_titre . '</h1></li>';
-        $type = '<li class="list-group-item"><b>' . F_PAGE_TYPE . ' : </b>' . T_PAGE_TYPE[$this->_type] . '</li>';
-        $nb_bloc = '<li class="list-group-item"><b>' . F_PAGE_NBBLOC . ' : </b>' . $nb  . '</li>';
+        $titre = '<h2>' . $t_titre . '</h2>';
+        $type = '<p><b>' . F_PAGE_TYPE . ' : </b>' . T_PAGE_TYPE[$this->_type] . '</p>';
+        $nb_bloc = '<p"><b>' . F_PAGE_NBBLOC . ' : </b>' . $nb  . '</p>';
 
-        $list = '<ul class="list-group list-group-flush">' . $titre . $type . $nb_bloc . '</ul>';
+        return '<div class="ui segment">' . $titre . $type . $nb_bloc . '</div>';
+    }
 
-        $card = new \CATA\View\Card(['Content' => $list]);
-        return $card->View();
+    public function ViewMini()
+    {
+        $query = ['page' => 'page', 'catalogue' => $this->_id_catalogue, 'no' => $this->_numero];
+        $link = new \CATA\View\Link(['text' => $this->_titre . ' Titre', 'query' => $query]);
+        $image = '<div class="ui segment"><img src="' . $this->_thumb->Dir() . '" width="100%" height="275px" style="object-fit: cover;"/></div>';
+        $titre = '<div class="ui segment orange message">' . $link->View() . '</div>';
+        $card = new \CATA\View\Card(['header' => $link->View(), 'image' =>  $this->ViewThumb(), 'content' => 'toto', 'Footer' => $this->_numero]);
+        return '<div class="column four wide"><div class="ui raised segments center aligned">' . $titre . $image . '</div></div>';
     }
 
     //put your code here

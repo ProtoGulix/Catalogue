@@ -15,6 +15,7 @@ $dsn = 'mysql:host=localhost;dbname=catalogue;charset=utf8';
 $username = 'root';
 
 $racine = 'https://localhost/Catalogue/';
+$site_name = 'Réf & Co.';
 
 $dir_page = 'Page';
 $dir_temp = 'temps';
