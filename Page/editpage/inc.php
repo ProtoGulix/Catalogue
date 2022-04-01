@@ -42,7 +42,8 @@ if ($session->Check()) {
             $table_row = NULL;
         }
 
-        $field[] = ['Table' => 'Text', 'type' => 'text', 'name' => 'page_title', 'value' => $page->Titre()];
+        $field[] = ['Table' => 'Text', 'label' => 'Titre de la page', 'type' => 'text', 'name' => 'page_title', 'value' => $page->Titre()];
+        $field[] = ['Table' => 'Selects', 'label' => 'Type de page', 'name' => 'page_type', 'value' => T_PAGE_TYPE];
         $form_page = new \CATA\Form\View(['Fields' => $field, 'cible' => '?page=editpage&id=' . $id, 'bouton' => 'Envoyer']);
 
         $table_bloc = new \CATA\View\Tableau(['header' => $table_header, 'content' => $table_row]);

@@ -53,7 +53,7 @@ class View extends Entite
 
     public function setName($n)
     {
-        $this->_name = $n;
+        $this->_name =  $n;
     }
     public function setFields(array $field)
     {
@@ -80,7 +80,7 @@ class View extends Entite
 
     public function setBouton($bouton)
     {
-        $this->_bouton = '<button type="submit" class="btn btn-primary mt-3 ml-3" >' . $bouton . '</button>';
+        $this->_bouton = '<button type="submit" class="ui button" >' . $bouton . '</button>';
     }
 
     public function setCible($cible)
@@ -88,7 +88,7 @@ class View extends Entite
         $this->_cible = 'action="' . $cible . '"';
     }
 
-    public function View()
+    private function GetSecuToken()
     {
 
         if (isset($_COOKIE['authenticity_token'])) {
@@ -98,6 +98,10 @@ class View extends Entite
         } else {
             $secu_token = NULL;
         }
+    }
+
+    public function View()
+    {
 
         $f_html = NULL;
 
@@ -105,7 +109,7 @@ class View extends Entite
             $f_html .=  $field->buildHTML(); // Génération du HTML de Champ
         }
 
-        $d = '<form ' . $this->_cible . ' method="POST" class="ui form">' . $this->_titre . $this->_legend . $f_html . $secu_token . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
+        $d = '<form ' . $this->_cible . ' method="POST" class="ui form">' . $this->_titre . $this->_legend . $f_html . $this->GetSecuToken() . $this->_bouton . '</form>'; // Renvois le HTML assemblé des Champs du Formulaire
 
         return $d;
     }

@@ -33,9 +33,9 @@ class Text extends Field
     { // Controle et convertion de nombre de colonne
         $size = (int) $size;
         if ($size > 0) { //si superieur a zéro
-            $this->_size = $size;
+            $this->_size = 'size="' . $size . '"';
         } else { // Dans le cas ou il n'y aurais pas de valleur en definit 30 par defaut
-            $this->_size = 30;
+            $this->_size = 'size="' .  30 . '"';
         }
     }
 
@@ -51,21 +51,8 @@ class Text extends Field
 
     public function buildHTML()
     {
-        $html = '';
-        $size = NULL;
         $value = NULL;
         $lock = NULL;
-
-        if (!empty($this->_errorMessage)) { // Affichage du message d'erreur
-            $html .= $this->_errorMessage . '</br>';
-        }
-
-        $label = '<label class="form-label">' . $this->_label . '</label>';
-
-        if (!empty($this->_size)) {
-
-            $size = 'size="' . $this->_size . '"';
-        }
 
         if (!empty($this->_value)) {
 
@@ -76,9 +63,9 @@ class Text extends Field
             $lock = ' readonly';
         }
 
-        $input = '<input ' . $this->_placeholder . $this->_type . ' name="' . $this->_name . '"' . $size . $value . $lock . '>';
+        $input = '<input ' . $this->_placeholder . $this->_type . $this->_name  . $this->_size . $value . $lock . '>';
 
-        return  '<div class="field">' . $label . $input . '</div>';
+        return  '<div class="field">' . $this->_label . $input . '</div>';
     }
 
     //put your code here

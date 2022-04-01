@@ -213,6 +213,10 @@ include 'Gestionnaire.php';
 
         }
     );
+
+    $('.ui.radio.checkbox').checkbox();
+    $('.ui.checkbox').checkbox();
+    $('select.dropdown').dropdown();
 </script>
 
 </html>

@@ -32,51 +32,43 @@ class Check extends Field
     protected $_id;
     protected $_checked;
     protected $_protected;
+    protected $_class = 'class="ui checkbox"';
 
 
     public function setType($type)
     {
-        $this->_type = $type;
+        $this->_type = 'type="' . $type . '"';
+        if ($type == 'radio') {
+            $this->_class = 'class="ui radio checkbox"';
+        }
     }
 
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->_id = 'id="' . $id . '"';
     }
 
     public function setChecked($ck)
     {
-        $this->_checked = $ck;
+        if ($ck == TRUE) {
+            $this->_checked = 'checked';
+        }
     }
 
     public function setProtected($protect)
     {
-        $this->_protected = $protect;
+        if ($protect == TRUE) {
+            $this->_protected = 'disabled';
+        }
     }
 
 
     public function buildHTML()
     {
 
-        $protected = '';
-        $checked = '';
+        $check = '<input class="hidden" ' . $this->_type . $this->_name . $this->_id . 'value="' . $this->_value . '"' . $this->_checked . $this->_protected . '>'; // Ajoute le statut de protection 
 
-        if ($this->_protected == TRUE) {
-            $protected = 'disabled';
-        } //Bloque l'utilisation de champ
-        if ($this->_checked == TRUE) {
-            $checked = 'checked';
-        } // Ajoute la fonction de coche par defaut
-
-        $html = '';
-        $html .= '<div class="form-check">'; // Determine le Type CSS
-        $html .= '<input class="form-check-input" type="' . $this->_type . '" name="' . $this->_name . '"'; // Nom ET Type du Champ
-        $html .= 'id="' . $this->_id . '"'; // ID du Champ
-        $html .= 'value="' . $this->_value . '"'; // Valeur pour les FORMS
-        $html .= '\n' . $checked . $protected . '>'; // Ajoute le statut de protection 
-        $html .= '<label class="class="form-check-label">' . $this->_label . '</label></div>'; // Cloture du champ
-
-        return $html;
+        return '<div class="field"><div ' . $this->_class . '>' . $this->_label . $check . '</div></div>';
     }
 
 

@@ -28,30 +28,27 @@ class Selects extends Field
 {
 
     protected $_multi;
+    protected $_class = 'class="ui dropdown"';
 
     public function setMulti($multi)
     {
-        $this->_multi = $multi;
+        if ($multi == TRUE) {
+            $this->_multi = 'multiple="multiple"';
+            $this->_name .= rtrim($this->_name, '"') . '[]"';
+        } // Indique si il y a mutli-selection
+
     }
 
     public function buildHTML()
     {
 
-        $multi = NULL;
         $option = NULL;
-        $label = '<label>' . $this->_label . '</label>';
-        $name = $this->_name;
-
-        if ($this->_multi == TRUE) {
-            $multi = ' multiple="multiple"';
-            $name .= '[]';
-        } // Indique si il y a mutli-selection
 
         foreach ($this->_value as $k => $v) {
             $option .= '<option value="' . $k . '">' . $v . '</option>';
         } // Vide le tabelau des options
 
-        return $label . '<select name="' . $name . '" class="form-select"' . $multi . '>' . $option . '</select>';
+        return '<div class="field">' . $this->_label . '<select ' . $this->_name . $this->_class . $this->_multi . '>' . $option . '</select></div>';
     }
     //put your code here
 }

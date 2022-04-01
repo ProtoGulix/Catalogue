@@ -31,21 +31,6 @@ abstract class Field extends Entite
     protected $_lock = false; // Blocage de la valeur du champ
     protected $_errorMessage; // Message d'erreur si format incorrect 
 
-    public function label()
-    {
-        return $this->_label;
-    }
-
-    public function name()
-    {
-        return $this->_name;
-    }
-
-    public function value()
-    {
-        return $this->_value;
-    }
-
     public function isValid()
     {
         //Methode qui retourne si le champ est valide
@@ -53,12 +38,12 @@ abstract class Field extends Entite
 
     public function setLabel($label)
     {
-        $this->_label = (string) $label;
+        $this->_label = '<label>' . htmlspecialchars($label) . '</label>';
     }
 
     public function setName($name)
     {
-        $this->_name = (string) $name;
+        $this->_name = 'name ="' . htmlspecialchars($name) . '"';
     }
 
     public function setValue($value)
